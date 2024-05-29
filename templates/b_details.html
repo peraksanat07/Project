@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div id="content">
+  {% if books[4] %}
+    <img src="{{ book[4] }}" style="float:right;" />
+  {% endif %}
+  <h2>About {{ books[1] }}</h2>
+  <p>{{ books[2] }}</p>
+</div>
+{% endblock %}

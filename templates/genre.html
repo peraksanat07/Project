@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 > Genre | Library </h2>
+	<h3> Welcome to Genre Section!</h3>
+	{% for genre in genre %}
+	<p>
+	<a href="/genre/{{genre[0]}}">{{genre[1] }}</a>
+	</p>
+	{% endfor %}
+	{{genre}}
+{% endblock %}
