@@ -3,9 +3,8 @@
 <h2 > Books | Library </h2>
 <h3> Welcome to Books Section!</h3>	
 	{% for book in books %}
-	<p>
-	<a href="/books/{{Books[0]}}">{{ Books[1] }}</a>
-	</p>
+		<p>
+			<a href="/books/{{book[0]}}">{{ book[1] }}</a>
+		</p>
 	{% endfor %}
-	{{book}}
 {% endblock %}

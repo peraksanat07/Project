@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div id="content">
-  {% if authors[3] %}
-    <img src="{{ authors[3] }}" style="float:right;" width = 300px />
+  {% if author[3] %}
+    <img src="{{ author[3] }}" style="float:right;" width = 300px />
   {% endif %}
-  <h2>About {{ authors[1] }}</h2>
-  <p>{{ authors[2] }}</p>
+  <h2>About {{ author[1] }}</h2>
+  <p>{{ author[2] }}</p>
 </div>
 {% endblock %}

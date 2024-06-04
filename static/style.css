@@ -1,53 +1,53 @@
 body {
     font-family: "Verdana"; 
-    color : #006d77 ; text-align: center; 
-    background-color: #edf6f9;
+    color : #a3c5be ; text-align: center; 
+    background-color: #EDf6f9;
 }
 
-h1 { color: #006d77; }
+h2 { color: #362f44; }
 
 p{ 
-    color: rgb(234, 123, 110) ;
+    color: #a27167 ;
 }
 
 
 /* this is a navigation bar */
 
-            /* background color */
-            .topnav {
-                background-color: #e29578;
-                overflow: hidden;
-              }
+ /* background color */
+.topnav {
+  background-color: #e29578;
+  overflow: hidden;
+}
               
-              /* Style the links inside the navigation bar */
-              .topnav a {
-                float: left;
-                color: #fff2ed;
-                text-align: center;
-                padding: 14px 125px;
-                text-decoration: none;
-                font-size: 18.5px;
-              }
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #fff2ed;
+  text-align: center;
+  padding: 14px 125px;
+  text-decoration: none;
+  font-size: 18.5px;
+}
               
-              /* Change the color of links on hover */
-              .topnav a:hover {
-                background-color: #c97556;
-                color: rgb(233, 191, 141);
-              }
-              
-              /* Add a color to the active/current link */
-              .topnav a.active {
-                background-color: rgb(206, 155, 126);
-                color: white;
-              }
-  
-              .center {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 50%;
-              }
-  
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #bc745a;
+  color: rgb(233, 191, 141);
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: rgb(206, 155, 126);
+  color: white;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
 footer {
     position: fixed;
     left: 0;
@@ -58,7 +58,33 @@ footer {
     text-align: center;
     border-bottom-right-radius: 5px;
    border-bottom-left-radius: 5px;
-    background-color: #83c5be;
+    background-color: #006d77;
               }
   
-.line  {background-color: #aee1dc;}
+.line  {background-color: #a29b89;}
+
+div.background {
+  background: url(/static/images/lb.jpeg) repeat;
+  border: 2px solid black;
+}
+
+div.transbox {
+  margin: 30px;
+  background-color: #f9f0e5;
+  border: 1px solid black;
+  opacity: 0.6;
+}
+
+div.transbox p {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
+
+.header {
+  padding: 60px;
+  text-align: center;
+  background: #a3c5be;
+  color: #006d77;
+  font-size: 30px;
+}

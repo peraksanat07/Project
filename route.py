@@ -26,10 +26,10 @@ def about():
 def author():
     con = sqlite3.connect(app.config['DATABASE'])
     cur = con.cursor()
-    cur.execute("SELECT name FROM Author ORDER BY id;")
-    author = cur.fetchall()
+    cur.execute("SELECT id,name FROM Author ORDER BY id;")
+    authors = cur.fetchall()
     con.close()
-    return render_template("author.html", author=author)
+    return render_template("author.html", authors=authors)
 
 
 @app.route('/author/<int:id>')
@@ -37,19 +37,19 @@ def author_details(id):
     con = sqlite3.connect('project.db')
     cur = con.cursor()
     cur.execute("SELECT * FROM Author WHERE id=?;",(id,))
-    authors = cur.fetchone()
+    author = cur.fetchone()
     con.close()
-    return render_template("a_details.html", authors=authors)
+    return render_template("a_details.html", author=author)
 
 
 @app.route('/books')
 def books():
     con = sqlite3.connect(app.config['DATABASE'])
     cur = con.cursor()
-    cur.execute("SELECT name FROM Books ORDER BY id;")
-    book = cur.fetchall()
+    cur.execute("SELECT id,name FROM Books ORDER BY id;")
+    books = cur.fetchall()
     con.close()
-    return render_template("book.html", book=book)
+    return render_template("book.html", books=books)
 
 
 @app.route('/books/<int:id>')
@@ -57,19 +57,19 @@ def book_details(id):
     con = sqlite3.connect('project.db')
     cur = con.cursor()
     cur.execute("SELECT * FROM Books WHERE id=?;",(id,))
-    books = cur.fetchone()
+    book = cur.fetchone()
     con.close()
-    return render_template("b_details.html", books=books)
+    return render_template("b_details.html", book=book)
 
 
 @app.route('/genre')
 def genre():
     con = sqlite3.connect(app.config['DATABASE'])
     cur = con.cursor()
-    cur.execute("SELECT name FROM Genre ORDER BY id;")
-    genre = cur.fetchall()
+    cur.execute("SELECT id,name FROM Genre ORDER BY id;")
+    genres = cur.fetchall()
     con.close()
-    return render_template("genre.html", genre=genre)
+    return render_template("genre.html", genres=genres)
 
 
 @app.route('/genre/<int:id>')
@@ -77,9 +77,9 @@ def genre_details(id):
     con = sqlite3.connect('project.db')
     cur = con.cursor()
     cur.execute("SELECT * FROM Genre WHERE id=?;",(id,))
-    genres = cur.fetchone()
+    genre = cur.fetchone()
     con.close()
-    return render_template("g_details.html", genres=genres)
+    return render_template("g_details.html", genre=genre)
 
 
 if __name__ == "__main__":
