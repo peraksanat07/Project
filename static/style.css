@@ -1,10 +1,11 @@
 body {
     font-family: "Verdana"; 
-    color : #a3c5be ; text-align: center; 
+    color : #a3c5be ; 
     background-color: #EDf6f9;
 }
 
-h2 { color: #362f44; }
+h3 {     color : #a3c5be ; text-align: center}
+h2 { color: #362f44; text-align: center}
 
 p{ 
     color: #a27167 ;
@@ -13,40 +14,6 @@ p{
 
 /* this is a navigation bar */
 
- /* background color */
-.topnav {
-  background-color: #e29578;
-  overflow: hidden;
-}
-              
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: left;
-  color: #fff2ed;
-  text-align: center;
-  padding: 14px 125px;
-  text-decoration: none;
-  font-size: 18.5px;
-}
-              
-/* Change the color of links on hover */
-.topnav a:hover {
-  background-color: #bc745a;
-  color: rgb(233, 191, 141);
-}
-
-/* Add a color to the active/current link */
-.topnav a.active {
-  background-color: rgb(206, 155, 126);
-  color: white;
-}
-
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
 
 footer {
     position: fixed;
@@ -56,8 +23,8 @@ footer {
     margin: 5 auto;
     padding: 10px;
     text-align: center;
-    border-bottom-right-radius: 5px;
-   border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 0px;
+   border-bottom-left-radius: 0px;
     background-color: #006d77;
               }
   
@@ -93,39 +60,69 @@ div.transbox p {
   background-color: #e29578;
 }
 
-/* Style the links inside the navigation bar */
+
 .topnav a {
   float: left;
   display: block;
-  color: black;
+  color: rgb(248, 234, 226);
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
 }
 
-/* Change the color of links on hover */
 .topnav a:hover {
-  background-color: #c67254;
-  color: black;
+  background-color: #bb745a;
+  color: rgb(183, 157, 157);
 }
 
-/* Style the "active" element to highlight the current page */
 .topnav a.active {
   background-color: #2196F3;
   color: white;
 }
 
-/* Style the search box inside the navigation bar */
-.topnav input[type=text] {
+.topnav .search-container {
   float: right;
-  padding: 6px;
-  border: none;
-  margin-top: 8px;
-  margin-right: 16px;
-  font-size: 17px;
 }
 
+.topnav input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.topnav .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav .search-container {
+    float: none;
+  }
+  .topnav a, .topnav input[type=text], .topnav .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
   .topnav a, .topnav input[type=text] {
@@ -139,4 +136,128 @@ div.transbox p {
   .topnav input[type=text] {
     border: 1px solid #e29578;
   }
+}
+
+/* contact form */
+
+body {font-family: "gill sans", sans-serif; color:#cf7757}
+* {box-sizing: border-box;}
+
+input[type=text2], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ab989e;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #accbb8;
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #94b5a1;
+}
+
+.contactlist {
+  font-family: "gill sans", sans-serif; 
+  border-radius: 5px;
+  background-color: #9cbcbf;
+  padding: 20px;
+  
+}
+
+#button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+#button {
+  background-color: #accbb8; 
+  color: #ffffff; 
+}
+
+#button:hover {
+  background-color: #80a38d;
+  color: white;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(93, 165, 223); /* Fallback color */
+  background-color: rgba(99, 119, 146, 0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5px auto; /* 15% from the top and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  /* Position it in the top right corner outside of the modal */
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+/* Close button on hover */
+.close:hover,
+.close:focus {
+  color: rgb(255, 89, 0);
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.4s;
+  animation: animatezoom 0.2s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
 }

@@ -2,4 +2,60 @@
 {% block content %}
 <h2 > Contact Us | Library </h2>
 <h3> Welcome to Books Section!</h3>	
+<div class="contactlist">
+    <!-- name-->
+    <label for="fname">First Name</label>
+    <input type="text2" id="fname" name="firstname" placeholder="Your name..">
+    <!-- Last mame-->
+    <label for="lname">Last Name</label>
+    <input type="text2" id="lname" name="lastname" placeholder="Your last name..">
+    <!-- Country-->
+    <label for="country">Country <br> <em> (Note: not every country will be on the list) </em></label>
+    <!-- An unsmart listing of countries for the contacts form-->
+    <select id="country" name="country">
+      <option value="afghanistan">Afghanistan</option>
+      <option value="albania">Albania</option>
+      <option value="andorra">Andorra</option>
+      <option value="australia">Australia</option>
+      <option value="austria">Austria</option>
+      <option value="bahamas">Bahamas</option>
+      <option value="bahrain">Bahrain</option>
+      <option value="bangladesh">Bangladesh</option>
+      <option value="barbados">Barbados</option>
+      <option value="cambodia">Cambodia</option>
+      <option value="canada">Canada</option>
+      <option value="china">China</option>
+      <option value="denmark">Denmark</option>
+      <option value="egypt">Egypt</option>
+      <option value="fiji">Fiji</option>
+      <option value="france">France</option>
+      <option value="germany">Germany</option>
+      <option value="greece">Greece</option>
+      <option value="hong-kong">Hong Kong</option>
+      <option value="hungary">Hungary</option>
+      <option value="india">India</option>
+      <option value="ireland">Ireland</option>
+      <option value="japan">Japan</option>
+      <option value="southkorea">South Korea</option>
+      <option value="latvia">Latvia</option>
+      <option value="madagascar">Madagascar</option>
+      <option value="malaysia">Malaysia</option>
+      <option value="netherlands">Netherlands</option>
+      <option value="new-zealand">New Zealand</option>
+      <option value="norway">Norway</option>
+      <option value="oman">Oman</option>
+      <option value="pakistan">Pakistan</option>
+      <option value="peru">Peru</option>
+      <option value="portugal">Portugal</option>
+      <option value="qatar">Qatar</option>
+      <option value="rwanda">Rwanda</option>
+      <option value="samoa">Samoa</option>
+      <option value="serbia">Serbia</option>
+      <option value="singapore">Singapore</option>
+      <option value="uk">UK</option>
+      <option value="usa">USA</option>
+    </select>
+    <label for="subject">Subject</label>
+    <!-- Subject section-->
+    <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
 {% endblock %}

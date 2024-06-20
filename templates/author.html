@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2 > Books | Library </h2>
-<h3> Welcome to Books Section!</h3>	
+<h2 > Authors | Library </h2>
+<h3> Welcome to Authors Section!</h3>	
 	{% for author in authors %}
 		<p>
 			<a href="/author/{{author[0]}}">{{ author[1] }}</a>
 		</p>
 	{% endfor %}
+	<h1> ------------------------------------------------------------------------   </h1>
+
 {% endblock %}

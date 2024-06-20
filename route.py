@@ -46,8 +46,11 @@ def author_details(id):
     cur = con.cursor()
     cur.execute("SELECT * FROM Author WHERE id=?;",(id,))
     author = cur.fetchone()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM book_author WHERE book=author;",(author,))
+    book_author = cur.fetchone()
     con.close()
-    return render_template("a_details.html", author=author)
+    return render_template("a_details.html", author=author, book_author=book_author)
 
 
 @app.route('/books')
