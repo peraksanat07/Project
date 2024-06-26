@@ -24,9 +24,14 @@
 
       <a href="/log-in"> Log In</a>
         <div class="search-container">
-          <form action="/action_page.php">
-            <input type="text" placeholder="Search.." name="search">
-            <button type="submit"><i class="fa fa-search"></i></button>
+          <!-- <form action="/action_page.php"> -->
+            <form action='/search', method='post'>
+              <!-- {# post means send it to the server (the opposite, viewing a page, is GET) #} -->
+              <label for='searchterm'> </label>
+              <input type='text' id='searchterm', name='searchterm'>
+              <button type='submit'>Search</button>
+            </form>
+            
           </form>
         </div>
       </div>

@@ -6,6 +6,15 @@
   {% endif %}
   <h2>About {{ book[1] }}</h2>
   <p>{{ book[2] }}</p>
-  <p> Book Genre:</p>
+  <p> Book Genre/s:
+  {% for genre in genre %}
+  <a href="/genre/{{ genre[0] }}">{{ genre[1] }}</a>{% if not loop.last %}, {% endif %}
+  {% endfor %}
+</p>
+<p> Author: 
+{% for author in authors %}
+<a href="/author/{{ author[0] }}">{{ author[1] }}</a>{% if not loop.last %}, {% endif %}
+{% endfor %}
+</p>
 </div>
 {% endblock %}

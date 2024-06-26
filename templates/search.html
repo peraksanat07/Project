@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Search Results for "{{ search_term }}"</h1>
+
+<h2>Books</h2>
+{% if books %}
+    {% for book in books %}
+	<h3> {{book [0]}} </h3>
+        <p>  {{book [1]}} <!-- Assuming the book name is in the second column --></p>
+    {% endfor %}
+{% else %}
+    <p>No books found.</p>
+{% endif %}
+<h1> --------------------------------------------------------------------------------   </h1>
+
+<h2>Genres</h2>
+{% if genres %}
+    {% for genre in genres %}
+        <h3>{{genre [0]}} <!-- Assuming the genre name is in the second column --></h3>
+		<p> {{genre [1]}}</p>
+    {% endfor %}
+{% else %}
+    <p>No genres found.</p>
+{% endif %}
+<h1> --------------------------------------------------------------------------------   </h1>
+
+<h2>Authors</h2>
+{% if authors %}
+    <ul>
+    {% for author in authors %}
+	<h3> {{author [0]}}</h3>
+        <p>{{author [1]}} <!-- Assuming the author name is in the second column --></p>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No authors found.</p>
+{% endif %}
+<h1> --------------------------------------------------------------------------------   </h1>
+
+{% endblock %}
