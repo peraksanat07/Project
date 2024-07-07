@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 <h2 > Authors | Library </h2>
+<!--  authors page  -->
 <h3> Welcome to Authors Section!</h3>	
+<!-- list of authors in one page -->
 	{% for author in authors %}
 		<p>
 			<a href="/author/{{author[0]}}">{{ author[1] }}</a>

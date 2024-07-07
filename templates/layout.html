@@ -1,47 +1,81 @@
 <!doctype html>
+
 <html>
+
   <head>
+
     <title>Library</title>
+
     <link rel="stylesheet" href="/static/style.css">
+
     <link rel="icon" href="/static/images/book.png" type="image/png">
 
   </head>
+  
+
   <body>
+
     <header>
-      <div id = "wrapper"> 
+
       <div class="header">
+
+        <!-- header name  -->
         <h1>Library</h1>
+
       </div>
+
     </header>
-   
+
+
+    <!-- navigation bar -->
     <div class="topnav">
 
       <a href="/">Home</a>
+
       <a href="/books">Books</a>
+
       <a href="/genre">Genre</a>
+
       <a href="/author">Author</a>
+
       <a href="/contact_us">Contact Us</a>
 
       <a href="/log-in"> Log In</a>
+
         <div class="search-container">
-          <!-- <form action="/action_page.php"> -->
+
             <form action='/search', method='post'>
+
               <!-- {# post means send it to the server (the opposite, viewing a page, is GET) #} -->
               <label for='searchterm'> </label>
-              <input type='text' id='searchterm', name='searchterm'>
+
+              <input type='text' id='searchterm', placeholder = ' search title...' name='searchterm'>
+              
               <button type='submit'>Search</button>
             </form>
-            
-          </form>
+    
         </div>
       </div>
     </div>
   </div>
 
+
     <main>
-      {% block content %}{% endblock %}
+
+      <!-- body -->
+
+      {% block content %}
+
+      {% endblock %}
+
     </main>
 
-    <footer> <h3> this is a footer for Peraksana Thayakaran's Project Page. No copyrights here lol </h3> </footer>
-  </body>
+
+    <footer> 
+
+      <!-- footer -->
+      <h3> this is a footer for Peraksana Thayakaran's Project Page. No copyrights here lol </h3> </footer>
+  
+    </body>
+
 </html>

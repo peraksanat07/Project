@@ -20,25 +20,21 @@ def homepage():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        # in other words, someone clicked submit, 'POSTing' info
-        # back to the server
         search = request.form.get('searchterm')
         con = sqlite3.connect(app.config['DATABASE'])
         cur = con.cursor()
-        cur.execute("SELECT name, blurb FROM Books WHERE name LIKE ?", ('%' + search + '%',))
-        search1 = cur.fetchall()
-        cur = con.cursor()        
-        cur.execute("SELECT name, description FROM Genre WHERE name LIKE ?", ('%' + search + '%',))
-        search2 = cur.fetchall()
-        cur = con.cursor()        
-        cur.execute("SELECT name, description FROM Author WHERE name LIKE ?", ('%' + search + '%',))   
-        search3 = cur.fetchall()     
+        search_queries = [
+            ("SELECT name, blurb FROM Books WHERE name LIKE ?", search),
+            ("SELECT name, description FROM Genre WHERE name LIKE ?", search),
+            ("SELECT name, description FROM Author WHERE name LIKE ?", search)
+        ]
+        results = []
+        for query, param in search_queries:
+            cur.execute(query, ('%' + param + '%',))
+            results.append(cur.fetchall())
         con.close()
-        # here is where you would do a query on your table for the search term
-
-        return render_template('search.html', search_term=search, books=search1, genres=search2, authors=search3)
-        # return f'You asked to search for \"{search, search1, search2, search3}\"'
-    else: 
+        return render_template('search.html', search_term=search, books=results[0], genres=results[1], authors=results[2])
+    else:
         return "nah"
         
 
@@ -48,9 +44,14 @@ def about():
     return render_template("layout.html")
 
 
-@app.route('/contact_us')
+@app.route('/contact_us', methods=['GET', 'POST'])
 def contact_us():
-
+    if request.method == 'POST':
+        with sqlite3.connect(app.config['DATABASE']) as con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO Responses (f_name, l_name, subject) VALUES(?,?,?)", 
+                        (request.form.get('firstname'), request.form.get('lastname'), request.form.get('subject')))
+            con.commit()
     return render_template("contact_us.html")
 
 
@@ -75,8 +76,6 @@ def author_details(id):
     cur.execute("SELECT * FROM Author WHERE id=?;",(id,))
     author = cur.fetchone()
     cur = con.cursor()
-    # cur.execute("SELECT book FROM book_author WHERE author=?;",(author,))
-    # book_id = cur.fetchall()
     cur.execute("SELECT id, name FROM Books WHERE id IN (SELECT book FROM book_author WHERE author=?)",(id,))
     books = cur.fetchall()
     con.close()
@@ -126,6 +125,7 @@ def genre_details(id):
     genre = cur.fetchone()
     con.close()
     return render_template("g_details.html", genre=genre)
+
 
 
 if __name__ == "__main__":

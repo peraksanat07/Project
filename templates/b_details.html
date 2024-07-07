@@ -1,11 +1,22 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div id="content">
-  {% if book[4] %}
-    <img src="{{ book[4] }}" style="float:right;" />
-  {% endif %}
+  <!-- image -->
+  <!-- image -->
+    {% if book[3] %}
+      <div class="container">
+        <img src="{{ book[3] }}" alt="Books Image" class="image"/>
+        <div class="overlay">
+          <div class="text">Picture of {{ book[1] }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+  <!-- book name  -->
   <h2>About {{ book[1] }}</h2>
+  <!-- description -->
   <p>{{ book[2] }}</p>
+  <!-- association tables -->
   <p> Book Genre/s:
   {% for genre in genre %}
   <a href="/genre/{{ genre[0] }}">{{ genre[1] }}</a>{% if not loop.last %}, {% endif %}
