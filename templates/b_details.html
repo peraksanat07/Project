@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
+
 {% block content %}
-<div id="content">
-  <!-- image -->
-  <!-- image -->
+  <div id="content">
+    <!-- Display book image if available -->
     {% if book[3] %}
       <div class="container">
         <img src="{{ book[3] }}" alt="Books Image" class="image"/>
@@ -12,20 +12,46 @@
       </div>
     {% endif %}
 
-  <!-- book name  -->
-  <h2>About {{ book[1] }}</h2>
-  <!-- description -->
-  <p>{{ book[2] }}</p>
-  <!-- association tables -->
-  <p> Book Genre/s:
-  {% for genre in genre %}
-  <a href="/genre/{{ genre[0] }}">{{ genre[1] }}</a>{% if not loop.last %}, {% endif %}
-  {% endfor %}
-</p>
-<p> Author: 
-{% for author in authors %}
-<a href="/author/{{ author[0] }}">{{ author[1] }}</a>{% if not loop.last %}, {% endif %}
-{% endfor %}
-</p>
-</div>
+    <!-- Book title -->
+    <h2>About {{ book[1] }}</h2>
+    
+    <!-- Book description -->
+    <p>{{ book[2] }}</p>
+
+    <!-- association tables -->
+    <p> Book Genre/s:
+      {% for genre in genre %}
+        <a href="/genre/{{ genre[0] }}">
+          {{ genre[1] }}
+        </a>
+        {% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+
+    <!-- Display book authors -->
+    <p>Author:
+      {% for author in authors %}
+        <a href="/author/{{ author[0] }}">{{ author[1] }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  </div>
+
+  <!-- Horizontal line separators -->
+  <h1>------------------------------------------------------------------------</h1>
+  <h1>------------------------------------------------------------------------</h1>
+
 {% endblock %}
+In this version:
+
+Comments are added to describe each section of the code, making it clear what each part does.
+Indentation is maintained consistently to improve readability.
+Content such as book image, title, description, genres, and authors are displayed sequentially for easy understanding.
+Horizontal lines are clearly separated at the end of the block to visually distinguish different sections of the page.
+
+
+
+
+
+
+
+

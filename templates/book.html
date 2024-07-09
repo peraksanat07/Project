@@ -1,12 +1,42 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2 > Books | Library </h2>
-<h3> Welcome to Books Section!</h3>	
-	{% for book in books %}
-		<p>
-			<a href="/books/{{book[0]}}">{{ book[1] }}</a>
-		</p>
-	{% endfor %}
-	<h1> ------------------------------------------------------------------------   </h1>
+    <h2>Books | Library</h2>
+    <h3>Welcome to Books Section!</h3>
+
+    <div class="content">
+
+        <!-- Introduction Section -->
+        <h2>Introduction</h2>
+        <p style="font-size: 120%;">
+            Books have long been a gateway to new worlds, offering windows into the lives of diverse characters and perspectives.
+            They entertain, educate, and inspire, fostering empathy and understanding across cultures and generations.
+        </p>
+
+        <!-- Usage Instructions -->
+        <h3>How to use this page</h3>
+        <p style="font-size: 120%;">
+            Click on the photos to see their individual profiles and blurbs. Admins can add or remove items as they please.
+        </p>
+
+    </div>
+
+    {% for book in books %}
+    <!-- Book Listing -->
+    <div class="column">
+        <div class="container">
+            <div class="middle">
+                <a href="/books/{{ book[0] }}">
+                    <img src="{{ book[2] }}" alt="Unavailable" class="image">
+                    <div class="text">
+                        {{ book[1] }}
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Horizontal Line Separator -->
+    <h1>------------------------------------------------------------------------</h1>
 
 {% endblock %}

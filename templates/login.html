@@ -1,43 +1,43 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2 > Log In | Library </h2>
-<button id = "button" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+<!-- Page title and heading -->
+<h2>Log In | Library</h2>
+<h3>For Admin Only</h3>
 
-<div id="id01" class="modal">
-  
-  <form class="modal-content animate" action="/action_page.php" method="post">
-    <div class="imgcontainer">
-      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-      <img src="/static/images/login.png" alt="Avatar" class="avatar, center" width = 20%>
+<!-- Main content container -->
+<div class="container">
+    <div class="box form-box">
+        <!-- Form header -->
+        <header>Login</header>
+        <!-- Login form -->
+        <form action="" method="post">
+            <!-- Username input field -->
+            <div class="field input">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" autocomplete="off" required>
+            </div>
+
+            <!-- Password input field -->
+            <div class="field input">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" autocomplete="off" required>
+            </div>
+
+            <!-- Submit button -->
+            <div class="field">
+                <input type="submit" class="btn" name="submit" value="Login" required>
+            </div>
+
+            <!-- Links section (sign up link) -->
+            <div class="links">
+                Don't have an account? <a href="register">Sign Up Now</a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+<!-- Horizontal lines for separation -->
+<h1>------------------------------------------------------------------------</h1>
+<h1>------------------------------------------------------------------------</h1>
 
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-        
-      <button id = "button" type="submit">Login</button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
-    </div>
-
-    <div class="container" style="background-color:#f1f1f1">
-      <button id = "button" type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#">password?</a></span>
-    </div>
-  </form>
-  <script>
-    // Get the modal
-    var modal = document.getElementById('id01');
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-    </script>
 {% endblock %}

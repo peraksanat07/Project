@@ -1,14 +1,57 @@
 {% extends "layout.html" %}
-{% block content %}
-<h2 > Authors | Library </h2>
-<!--  authors page  -->
-<h3> Welcome to Authors Section!</h3>	
-<!-- list of authors in one page -->
-	{% for author in authors %}
-		<p>
-			<a href="/author/{{author[0]}}">{{ author[1] }}</a>
-		</p>
-	{% endfor %}
-	<h1> ------------------------------------------------------------------------   </h1>
 
+{% block content %}
+  <h2>Authors | Library</h2>
+  <h3>Welcome to Authors Section!</h3>
+
+  <div class="content">
+    <!-- Introduction -->
+    <h2>Introduction</h2>
+    <p style="font-size:120%;">
+      Famous authors have left lasting impacts on literature, shaping the world with their storytelling, unique viewpoints, and deep insights into the human experience. Here are some inspirational writers of all times who have written well-known books that we all treasure.
+    </p>
+
+    <!-- How to be like these authors -->
+    <h3>How to be like these authors</h3>
+    <p style="font-size:120%;">
+      Read widely and deeply, and write regularly. Seek feedback from others and revise and edit. Explore new themes and ideas while staying true to yourself.
+    </p>
+
+    <!-- Writer's Block -->
+    <h3>Writer's Block</h3>
+    <p style="font-size:120%;">
+      You may come across writer's block, where you suddenly get a mind blank and stare at your entry unsure of what to write. To overcome this, a change of scenery or listening to music might help. Using prompts or establishing a writing routine can also stimulate ideas during these periods.
+    </p>
+
+    <!-- How to use this page -->
+    <h3>How to use this page</h3>
+    <p style="font-size:120%;">
+      Click on the photos to see individual profiles and blurbs. Admins can add or remove items as they please.
+    </p>
+  </div>
+
+  <!-- Loop through authors -->
+  {% for author in authors %}
+    <div class="column">
+      <div class="container">
+        <div class="middle">
+          <a href="/author/{{ author[0] }}">
+            <img src="{{ author[2] }}" alt="Unavailable" class="image">
+            <div class="text">
+              {{ author[1] }}
+            </div>
+          </a>
+        </div>
+      </div>
+      <h3>
+        <a href="/author/{{ author[0] }}">
+          {{ author[1] }}
+        </a>
+      </h3>
+    </div>
+  {% endfor %}
+
+  <!-- Line breaks -->
+  <h1>------------------------------------------------------------------------</h1>
+  <h1>------------------------------------------------------------------------</h1>
 {% endblock %}

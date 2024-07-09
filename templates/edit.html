@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Link to go back to the welcome page -->
+    <p><a href="welcome">Back to Welcome Page</a></p>
+    
+    <!-- Right-side navigation links -->
+    <div class="right-links">
+        <a href="#">Change Profile</a>
+        <a href="logout.php">
+            <button class="btn">
+                Log Out
+            </button>
+        </a>
+    </div>
+
+    <!-- Main content container -->
+    <div class="container">
+        <div class="box form-box">
+            <!-- Form header -->
+            <header>Change Profile</header>
+            
+            <!-- Profile update form -->
+            <form action="" method="post">
+                <!-- Username field -->
+                <div class="field input">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" autocomplete="off" required>
+                </div>
+                
+                <!-- Email field -->
+                <div class="field input">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" autocomplete="off" required>
+                </div>
+                
+                <!-- Age field -->
+                <div class="field input">
+                    <label for="age">Age</label>
+                    <input type="number" name="age" id="age" autocomplete="off" required>
+                </div>
+                
+                <!-- Submit button -->
+                <div class="field">
+                    <input type="submit" class="btn" name="submit" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Horizontal rule for visual separation -->
+    <h1>------------------------------------------------------------------------</h1>
+{% endblock %}

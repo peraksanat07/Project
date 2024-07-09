@@ -1,10 +1,21 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<h2 > Genre | Library </h2>
-<h3> Welcome to Genre Section!</h3>	
-	{% for genre in genres %}
-		<p>
-			<a href="/genre/{{genre[0]}}">{{ genre[1] }}</a>
-		</p>
-	{% endfor %}
+
+<!-- title -->
+<h2>Genre | Library</h2>
+<h3>Welcome to Genre Section!</h3>
+
+<!-- loop -->
+{% for genre in genres %}
+    <div class="text">
+        <!-- Link to each genre page -->
+        <p><a href="/genre/{{ genre[0] }}">{{ genre[1] }}</a></p>
+    </div>
+{% endfor %}
+
+<!-- Line breaks for separation -->
+<h1>------------------------------------------------------------------------</h1>
+<h1>------------------------------------------------------------------------</h1>
+
 {% endblock %}

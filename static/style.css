@@ -11,7 +11,90 @@ h2 {color: #708298; text-align: center}
 
 p{ 
     color: #a27167 ;
+    text-decoration: none;
+    font-weight: 600;
+
 }
+p a{ 
+  color: #a3c5be ;
+  text-decoration: none;
+
+}
+
+h3 a{ 
+  color: #a3c5be ;
+  text-decoration: none;
+
+}
+
+
+
+/* img {
+  width:  250px;
+  height: 300px;
+  object-fit: cover;
+
+} */
+
+ .container {
+  position: relative;
+  /* width: 50%; */
+} 
+
+.image {
+  opacity: 1;
+  display: block;
+  width:  250px;
+  height: 300px;
+  object-fit: cover;
+  transition: .5s ease;
+  backface-visibility: hidden;
+
+}
+
+.middle {
+  transition: .5s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+} 
+
+.container:hover .image {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  background-color: #09808b;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  text-decoration: none;
+
+  
+}
+
+.text:hover {
+  transition: .5s ease;
+  background-color: #06535b;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  text-decoration: none;
+
+  
+}
+
+
+
+
 h1 { text-align: center;}
 
 /* this is a navigation bar */
@@ -140,6 +223,50 @@ div.transbox p {
   }
 }
 
+/* grid images */
+.row {
+  margin: 8px -16px;
+}
+
+/* Add padding BETWEEN each column */
+.row,
+.row > .column {
+  padding: 8px;
+}
+
+/* Create four equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 25%;
+}
+
+/* Clear floats after rows */ 
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Content */
+.content {
+  background-color: white;
+  padding: 10px;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 900px) {
+  .column {
+    width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
 /* contact form */
 
 body {font-family: "gill sans", sans-serif; color:#cf7757}
@@ -253,91 +380,6 @@ input[type=submit]:hover {
   padding-top: 60px;
 }
 
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  margin: 5px auto; /* 15% from the top and centered */
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-  /* Position it in the top right corner outside of the modal */
-  position: absolute;
-  right: 25px;
-  top: 0;
-  color: #000;
-  font-size: 35px;
-  font-weight: bold;
-}
-
-/* Close button on hover */
-.close:hover,
-.close:focus {
-  color: rgb(255, 89, 0);
-  cursor: pointer;
-}
-
-/* Add Zoom Animation */
-.animate {
-  -webkit-animation: animatezoom 0.4s;
-  animation: animatezoom 0.2s
-}
-
-@-webkit-keyframes animatezoom {
-  from {-webkit-transform: scale(0)}
-  to {-webkit-transform: scale(1)}
-}
-
-@keyframes animatezoom {
-  from {transform: scale(0)}
-  to {transform: scale(1)}
-}
-
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20%;
-}
-
-.container {
-  position: relative;
-  width: 15%;
-  float: right;
-}
-
-.image {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  transition: .5s ease;
-  background-color: rgba(0, 140, 186, 0.8);
-}
-
-.container:hover .overlay {
-  opacity: 1;
-}
-
-.text {
-  color: white;
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-}
 
 /* rating */
 :root{
@@ -431,3 +473,120 @@ input[type=submit]:hover {
   
   transform: rotateY(180deg);
 }    
+
+
+/* login 2 */
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.box{
+  background: #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 25px;
+  border-radius: 20px;
+  box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
+              0 32px 64px -48px rgba(0,0,0,0.5);
+}
+
+.form-box{
+  width: 450px;
+  margin: 0px 10px;
+}
+
+.form-box header{
+  font-size: 25px;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 10px;
+}
+
+.form-box form .field{
+  display: flex;
+  margin-bottom: 10px;
+  flex-direction: column;
+}
+
+.form-box form .input{
+  height: 40px;
+  width: 100%;
+  font-size: 16px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: 1px;
+  outline: none;
+}
+
+/* check this is working */
+.btn{
+  height: 35px;
+  border: 0;
+  color: #fff;
+  background-color: #e29578;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: 10px;
+  padding: 0px 10px;
+}
+
+.btn:hover{
+  opacity: 0.82;
+}
+
+.submit{
+  width: 100%;
+}
+
+.links{
+  margin-bottom: 15px;
+}
+
+/* Home */
+.right-links a{
+  padding: 0 10px;
+}
+/*
+main{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.main-box{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+}
+
+.main-box .top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+} */
+
+.bottom {
+  width: 100%;
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 840px) {
+  .main-box .top{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .top .box{
+    margin: 40px 10px;
+  }
+  .bottom {
+    margin-top: 0;
+  }
+} 

@@ -1,10 +1,12 @@
 {% extends 'layout.html' %}
+
 {% block content %}
 <div id="content">
-  {% if genre[4] %}
-    <img src="{{ genre[4] }}" style="float:right;" />
-  {% endif %}
+  
+  <!-- Genre name heading -->
   <h2>About {{ genre[1] }}</h2>
+  
+  <!-- Genre description paragraph -->
   <p>{{ genre[2] }}</p>
 </div>
 {% endblock %}

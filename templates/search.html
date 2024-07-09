@@ -1,47 +1,60 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<!-- Search results title -->
 <h1>Search Results for "{{ search_term }}"</h1>
 
+<!-- Books section -->
 <h2>Books</h2>
 
 {% if books %}
     {% for book in books %}
-	<h3> {{book [0]}} </h3>
-        <p>  {{book [1]}} </p>
+        <!-- Book title and description -->
+	<h3>{{ book[0] }}</h3>
+        <p>{{ book[1] }}</p>
     {% endfor %}
 {% else %}
+    <!-- Message when no books found -->
     <p>No books found.</p>
 {% endif %}
 
-<h1> --------------------------------------------------------------------------------   </h1>
+<!-- Horizontal line -->
+<h1>--------------------------------------------------------------------------------</h1>
 
+<!-- Genres section -->
 <h2>Genres</h2>
 
 {% if genres %}
     {% for genre in genres %}
-        <h3>{{genre [0]}} </h3>
-		<p> {{genre [1]}}</p>
+        <!-- Genre title and description -->
+        <h3>{{ genre[0] }}</h3>
+	<p>{{ genre[1] }}</p>
     {% endfor %}
 {% else %}
+    <!-- Message when no genres found -->
     <p>No genres found.</p>
 {% endif %}
 
-<h1> --------------------------------------------------------------------------------   </h1>
+<!-- Horizontal line -->
+<h1>--------------------------------------------------------------------------------</h1>
 
+<!-- Authors section -->
 <h2>Authors</h2>
 
 {% if authors %}
     <ul>
     {% for author in authors %}
-	<h3> {{author [0]}}</h3>
-        <p>{{author [1]}} </p>
+	<!-- Author name and description -->
+	<h3>{{ author[0] }}</h3>
+        <p>{{ author[1] }}</p>
     {% endfor %}
     </ul>
 {% else %}
+    <!-- Message when no authors found -->
     <p>No authors found.</p>
 {% endif %}
 
-<h1> --------------------------------------------------------------------------------   </h1>
+<!-- Horizontal line -->
+<h1>--------------------------------------------------------------------------------</h1>
 
 {% endblock %}

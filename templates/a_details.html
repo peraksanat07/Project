@@ -1,25 +1,30 @@
 {% extends 'layout.html' %}
-{% block content %}
-<div id="content">
-  <!-- image -->
-  {% if author[3] %}
-    <div class="container">
-      <img src="{{ author[3] }}" alt="Author Image" class="image"/>
-      <div class="overlay">
-        <div class="text">Picture of {{ author[1] }}</div>
-      </div>
-    </div>
-  {% endif %}
 
-  <h2>About {{ author[1] }}</h2>
-  <!-- description -->
-  <p>{{ author[2] }}</p>
-</div>
-<!-- association table link  -->
-  <p> Books:
-  {% for book in books %}
-  <!-- what the author wrote  -->
-    <a href="/books/{{ book[0] }}">{{ book[1] }}</a>{% if not loop.last %}, {% endif %}
-  {% endfor %}
-  </p>
+{% block content %}
+  <div id="content">
+    <!-- Author Image -->
+    {% if author[3] %}
+      <div class="container">
+        <img src="{{ author[3] }}" alt="Author Image" class="image" />
+        <div class="overlay">
+          <div class="text">Picture of {{ author[1] }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    <h2>About {{ author[1] }}</h2>
+    <!-- Author Description -->
+    <p>{{ author[2] }}</p>
+
+    <!-- Associated Books -->
+    <p>Books:
+      {% for book in books %}
+        <a href="/books/{{ book[0] }}">{{ book[1] }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  </div>
+
+  <!-- Separators -->
+  <h1>------------------------------------------------------------------------</h1>
+  <h1>------------------------------------------------------------------------</h1>
 {% endblock %}
