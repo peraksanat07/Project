@@ -6,7 +6,12 @@ body {
 
 h4 {    color : #EDf6f9 ; 
 }
-h3 {     color : #a3c5be ; text-align: center}
+
+h3 { 
+  color : #a3c5be ; 
+  text-align: center;
+}
+
 h2 {color: #708298; text-align: center}
 
 p{ 
@@ -15,8 +20,59 @@ p{
     font-weight: 600;
 
 }
+
+.decor{ 
+  color: #0c6068 ;
+  font-size: large;
+  text-decoration: none;
+  background-color: #3b9ea7;
+  padding: 15px 32px;
+  font-weight: 600;
+  text-align: center;
+
+}
+
+.decor2{ 
+  color: #ce5f53 ;
+  font-size: large;
+  text-decoration: none;
+  background-color: #e29578;
+  padding: 15px 32px;
+  font-weight: 600;
+  text-align: center;
+
+}
+
+.portfolio {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.portfolio-image {
+  width: 100%;
+  height: auto;
+}
+
+.text2 {
+  background-color: #09808b;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
 p a{ 
-  color: #a3c5be ;
+  color: #bddad4 ;
+  text-decoration: none;
+
+}
+
+p a:hover{ 
+  color: #86b3ab ;
   text-decoration: none;
 
 }
@@ -27,14 +83,6 @@ h3 a{
 
 }
 
-
-
-/* img {
-  width:  250px;
-  height: 300px;
-  object-fit: cover;
-
-} */
 
  .container {
   position: relative;
@@ -92,6 +140,16 @@ h3 a{
   
 }
 
+.text1 {
+  background-color: #a9b7c8;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  text-decoration: none;
+
+  
+}
 
 
 

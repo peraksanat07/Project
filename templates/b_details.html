@@ -1,25 +1,18 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div id="content">
-    <!-- Display book image if available -->
-    {% if book[3] %}
-      <div class="container">
-        <img src="{{ book[3] }}" alt="Books Image" class="image"/>
-        <div class="overlay">
-          <div class="text">Picture of {{ book[1] }}</div>
-        </div>
-      </div>
-    {% endif %}
+
 
     <!-- Book title -->
+    <div class="text1">
     <h2>About {{ book[1] }}</h2>
-    
+    </div>
+    <h3> Blurb </h3>
     <!-- Book description -->
     <p>{{ book[2] }}</p>
 
     <!-- association tables -->
-    <p> Book Genre/s:
+    <p class="decor"> Book Genre/s:
       {% for genre in genre %}
         <a href="/genre/{{ genre[0] }}">
           {{ genre[1] }}
@@ -29,25 +22,26 @@
     </p>
 
     <!-- Display book authors -->
-    <p>Author:
+    <p class="decor2">Author:
       {% for author in authors %}
         <a href="/author/{{ author[0] }}">{{ author[1] }}</a>{% if not loop.last %}, {% endif %}
       {% endfor %}
     </p>
   </div>
 
+    <!-- Display book image if available -->
+    {% if book[3] %}
+      <div class="portfolio">
+        <img src="{{ book[3] }}" alt="Books Image" class="portfolio"/>
+          <div class="text2"> Book Cover of {{ book[1] }}</div>
+      </div>
+    {% endif %}
+
   <!-- Horizontal line separators -->
   <h1>------------------------------------------------------------------------</h1>
   <h1>------------------------------------------------------------------------</h1>
 
 {% endblock %}
-In this version:
-
-Comments are added to describe each section of the code, making it clear what each part does.
-Indentation is maintained consistently to improve readability.
-Content such as book image, title, description, genres, and authors are displayed sequentially for easy understanding.
-Horizontal lines are clearly separated at the end of the block to visually distinguish different sections of the page.
-
 
 
 

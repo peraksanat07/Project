@@ -2,20 +2,40 @@
 
 {% block content %}
 
-<!-- title -->
-<h2>Genre | Library</h2>
-<h3>Welcome to Genre Section!</h3>
+    <!-- title -->
+    <h2>Genre | Library</h2>
+    <h3>Welcome to Genre Section!</h3>
 
-<!-- loop -->
-{% for genre in genres %}
-    <div class="text">
-        <!-- Link to each genre page -->
-        <p><a href="/genre/{{ genre[0] }}">{{ genre[1] }}</a></p>
+    <div class="content">
+
+        <!-- Introduction Section -->
+        <h2>Introduction</h2>
+        <p style="font-size: 120%;">
+            Genres play a crucial role in the world of literature, music, and art, serving as a means to categorize and organize works based on their shared characteristics and themes. In literature, genres such as fiction, non-fiction, mystery, fantasy, and romance provide readers with a framework for what to expect from a book. For instance, a mystery novel typically involves a suspenseful plot with a puzzle to be solved, while a romance novel focuses on the relationship and emotional journey of the characters. In music, genres like rock, jazz, classical, and hip-hop distinguish different styles, each with its own unique history, instruments, and cultural significance. Similarly, in visual arts, genres such as realism, abstract, and surrealism help viewers understand the artist's approach and intent. By defining these categories, genres not only help audiences find works that align with their tastes but also allow creators to experiment within and beyond traditional boundaries, fostering innovation and diversity in their respective fields.
+        </p>
+
+        <!-- Usage Instructions -->
+        <h3>How to use this page</h3>
+        <p style="font-size: 120%;">
+            Click on the photos to see their individual profiles and blurbs. Admins can add or remove items as they please.
+        </p>
     </div>
-{% endfor %}
 
-<!-- Line breaks for separation -->
-<h1>------------------------------------------------------------------------</h1>
-<h1>------------------------------------------------------------------------</h1>
+    <!-- loop -->
+    {% for genre in genres %}
+        <div class="text">
+            <!-- Link to each genre page -->
+
+                <a href="/genre/{{ genre[0] }}">
+                    <p class="decor">
+                    {{ genre[1] }}
+                    </p>
+                </a> 
+    </div>
+    {% endfor %}
+
+    <!-- Line breaks for separation -->
+    <h1>------------------------------------------------------------------------</h1>
+    <h1>------------------------------------------------------------------------</h1>
 
 {% endblock %}
