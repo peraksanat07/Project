@@ -3,7 +3,7 @@
 
 <div class="right-links">
     <a href="edit">Change Profile</a>
-    <a href="logout.php">
+    <a href="{{ url_for('logout') }}">
         <button class="btn">Log Out</button>
     </a>
 </div>
@@ -18,7 +18,7 @@
     </div>
     
     <div class="main-box">
-        <p>And you are <b>{{ age }} years old</b>.</p>
+        <p>And you are <b> {{ age }} years old</b>.</p>
     </div>
 </main>
 

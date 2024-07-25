@@ -1,19 +1,24 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 from config import Config
 import sqlite3
+import re
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.secret_key = "testing secret thing"
+
 
 # Context processor to provide global context variables to templates
 @app.context_processor
 def context_processor():
     return dict(title=app.config['TITLE'])
 
+
 # Homepage route
 @app.route('/')
 def homepage():
     return render_template("home.html")
+
 
 # Search route to handle both GET and POST requests
 @app.route('/search', methods=['GET', 'POST'])
@@ -39,8 +44,7 @@ def search():
         # Render search results template with retrieved data
         return render_template('search.html', search_term=search, books=results[0], genres=results[1], authors=results[2])   
     else:
-        return "nah"  # Placeholder for handling GET requests
-
+        return render_template('error.html'), 404
 
 # About page route
 @app.route('/about')
@@ -88,20 +92,22 @@ def books():
 # Book details route with specific book ID
 @app.route('/books/<int:id>')
 def book_details(id):
-    con = sqlite3.connect('project.db')
-    cur = con.cursor()    
-    # Retrieve book details by ID
-    cur.execute("SELECT * FROM Books WHERE id=?;", (id,))
-    book = cur.fetchone() 
-    # Retrieve genres associated with the book
-    cur.execute("SELECT id, name FROM Genre WHERE id IN (SELECT genre FROM book_genre WHERE book=?);", (id,))
-    genre = cur.fetchall()
-    # Retrieve authors associated with the book
-    cur.execute("SELECT id, name FROM Author WHERE id IN (SELECT author FROM book_author WHERE book=?);", (id,))
-    authors = cur.fetchall()
-    con.close()
-    return render_template("b_details.html", book=book, genre=genre, authors=authors)
-
+        con = sqlite3.connect('project.db')
+        cur = con.cursor()    
+        # Retrieve book details by ID
+        cur.execute("SELECT * FROM Books WHERE id=?;", (id,))
+        book = cur.fetchone() 
+        if book:
+            # Retrieve genres associated with the book
+            cur.execute("SELECT id, name FROM Genre WHERE id IN (SELECT genre FROM book_genre WHERE book=?);", (id,))
+            genre = cur.fetchall()
+            # Retrieve authors associated with the book
+            cur.execute("SELECT id, name FROM Author WHERE id IN (SELECT author FROM book_author WHERE book=?);", (id,))
+            authors = cur.fetchall()
+            con.close()
+            return render_template("b_details.html", book=book, genre=genre, authors=authors)
+        else:
+            return render_template("error.html"), 404
 
 # Contact Us page route with form submission handling
 @app.route('/contact_us', methods=['GET', 'POST'])
@@ -137,26 +143,79 @@ def genre():
 @app.route('/genre/<int:id>')
 def genre_details(id):
     con = sqlite3.connect('project.db')
-    cur = con.cursor()
-    
+    cur = con.cursor() 
     # Retrieve genre details by ID
     cur.execute("SELECT * FROM Genre WHERE id=?;", (id,))
     genre = cur.fetchone()
-    
     con.close()
     return render_template("g_details.html", genre=genre)
 
-
-# Login page route
-@app.route('/log-in')
+# login
+@app.route('/log-in', methods=['GET', 'POST'])
 def log_in():
-    return render_template("login.html")
+    message = ''
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        username = request.form['username']
+        password = request.form['password']
+        con = sqlite3.connect('project.db')
+        cur = con.cursor()
+        cur.execute('SELECT * FROM users WHERE Username = ? AND Password = ?', (username, password))
+        user = cur.fetchone()
+        con.close()
+        if user:
+            session['loggedin'] = True
+            session['userid'] = user[0]
+            session['name'] = user[1]
+            session['username'] = user[1]
+            message = 'Logged in successfully!'
+            return render_template('welcome.html', message=message)
+        else:
+            message = 'Please enter correct email/password!'
+    return render_template('login.html', message=message)
+
+# Make function for logout session
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('userid', None)
+    session.pop('email', None)
+    return redirect(url_for('log_in'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html'), 404
 
 
 # Register page route
 @app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template("register.html")
+    message = ''
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'age' in request.form:
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        age = request.form['age']
+        con = sqlite3.connect('project.db')
+        cursor = con.cursor()
+        cursor.execute('SELECT * FROM users WHERE Email = ?', (email,))
+        account = cursor.fetchone()
+        if account:
+            message = 'Account already exists!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            message = 'Invalid email address!'
+        elif not username or not password or not email or not age:
+            message = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO users(Username, Email, Password, Age) VALUES(?, ?, ?, ?)', (username, email, password, age,))
+            con.commit()
+            message = 'You have successfully registered!'
+            return render_template('register.html', message=message)
+        con.close()
+    elif request.method == 'POST':
+        message = 'Please fill out the form!'
+    return render_template('register.html', message=message)
 
 
 # Welcome page route

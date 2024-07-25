@@ -9,8 +9,14 @@
     <div class="box form-box">
         <!-- Form header -->
         <header>Login</header>
+
+            <!-- Message display -->
+                {% if message %}
+                    <h2 class="message">{{ message }}</h2>
+                {% endif %}
+    
         <!-- Login form -->
-        <form action="" method="post">
+        <form action="{{ url_for('log_in') }}" method="post">
             <!-- Username input field -->
             <div class="field input">
                 <label for="username">Username</label>
