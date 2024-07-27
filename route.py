@@ -46,6 +46,7 @@ def search():
     else:
         return render_template('error.html'), 404
 
+
 # About page route
 @app.route('/about')
 def about():
@@ -71,11 +72,14 @@ def author_details(id):
     # Retrieve author details by ID
     cur.execute("SELECT * FROM Author WHERE id=?;", (id,))
     author = cur.fetchone()
-    # Retrieve books associated with the author
-    cur.execute("SELECT id, name FROM Books WHERE id IN (SELECT book FROM book_author WHERE author=?);", (id,))
-    books = cur.fetchall()
-    con.close()
-    return render_template("a_details.html", author=author, books=books)
+    if author:
+        # Retrieve books associated with the author
+        cur.execute("SELECT id, name FROM Books WHERE id IN (SELECT book FROM book_author WHERE author=?);", (id,))
+        books = cur.fetchall()
+        con.close()
+        return render_template("a_details.html", author=author, books=books)
+    else:
+        return render_template("error.html"), 404
 
 
 # Books list route
@@ -92,22 +96,22 @@ def books():
 # Book details route with specific book ID
 @app.route('/books/<int:id>')
 def book_details(id):
-        con = sqlite3.connect('project.db')
-        cur = con.cursor()    
-        # Retrieve book details by ID
-        cur.execute("SELECT * FROM Books WHERE id=?;", (id,))
-        book = cur.fetchone() 
-        if book:
-            # Retrieve genres associated with the book
-            cur.execute("SELECT id, name FROM Genre WHERE id IN (SELECT genre FROM book_genre WHERE book=?);", (id,))
-            genre = cur.fetchall()
-            # Retrieve authors associated with the book
-            cur.execute("SELECT id, name FROM Author WHERE id IN (SELECT author FROM book_author WHERE book=?);", (id,))
-            authors = cur.fetchall()
-            con.close()
-            return render_template("b_details.html", book=book, genre=genre, authors=authors)
-        else:
-            return render_template("error.html"), 404
+    con = sqlite3.connect('project.db')
+    cur = con.cursor()    
+    # Retrieve book details by ID
+    cur.execute("SELECT * FROM Books WHERE id=?;", (id,))
+    book = cur.fetchone()
+    if book:
+         # Retrieve genres associated with the book
+        cur.execute("SELECT id, name FROM Genre WHERE id IN (SELECT genre FROM book_genre WHERE book=?);", (id,))
+        genre = cur.fetchall()
+        # Retrieve authors associated with the book
+        cur.execute("SELECT id, name FROM Author WHERE id IN (SELECT author FROM book_author WHERE book=?);", (id,))
+        authors = cur.fetchall()
+        con.close()
+        return render_template("b_details.html", book=book, genre=genre, authors=authors)
+    else:
+        return render_template("error.html"), 404
 
 # Contact Us page route with form submission handling
 @app.route('/contact_us', methods=['GET', 'POST'])
@@ -148,7 +152,11 @@ def genre_details(id):
     cur.execute("SELECT * FROM Genre WHERE id=?;", (id,))
     genre = cur.fetchone()
     con.close()
-    return render_template("g_details.html", genre=genre)
+    if genre:
+        return render_template("g_details.html", genre=genre)
+    else:
+        return render_template("error.html"), 404
+
 
 # login
 @app.route('/log-in', methods=['GET', 'POST'])
@@ -168,10 +176,11 @@ def log_in():
             session['name'] = user[1]
             session['username'] = user[1]
             message = 'Logged in successfully!'
-            return render_template('welcome.html', message=message)
+            return render_template('admin.html', message=message)
         else:
             message = 'Please enter correct email/password!'
     return render_template('login.html', message=message)
+
 
 # Make function for logout session
 @app.route('/logout')
@@ -197,6 +206,11 @@ def register():
         password = request.form['password']
         email = request.form['email']
         age = request.form['age']
+        try:
+            age = int(age)
+        except ValueError:
+            message = 'Age must be a number!'
+            return render_template('register.html', message=message)
         con = sqlite3.connect('project.db')
         cursor = con.cursor()
         cursor.execute('SELECT * FROM users WHERE Email = ?', (email,))
@@ -205,6 +219,8 @@ def register():
             message = 'Account already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             message = 'Invalid email address!'
+        elif age < 16:
+            message = 'You are not old enough to register'
         elif not username or not password or not email or not age:
             message = 'Please fill out the form!'
         else:

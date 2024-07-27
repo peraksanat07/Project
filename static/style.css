@@ -546,8 +546,9 @@ input[type=submit]:hover {
 }
 
 .error h1 {
-  font-size: 6em;
+  font-size: 10em;
   margin: 0;
+  color: #84b0a7;
 }
 
 .error p {
@@ -647,29 +648,14 @@ input[type=submit]:hover {
   margin-bottom: 15px;
 }
 
+.message{
+  color: #cf2e1c
+}
+
 /* Home */
 .right-links a{
   padding: 0 10px;
 }
-/*
-main{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 60px;
-}
-
-.main-box{
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-}
-
-.main-box .top{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-} */
 
 .bottom {
   width: 100%;
