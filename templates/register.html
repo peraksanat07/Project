@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "u_layout.html" %}
 {% block content %}
 <!-- Page title and heading -->
 <h2>Register | Library</h2>
@@ -26,7 +26,7 @@
             </div>
             <!-- Age input field -->
             <div class="field input">
-                <label for="age">Age</label>
+                <label for="age">Age (Must be 16 or over)</label>
                 <input type="number" name="age" id="age" autocomplete="off" required>
             </div>
             <!-- Password input field -->
@@ -34,6 +34,12 @@
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" autocomplete="off" required>
             </div>
+             <!-- Password input field -->
+            <div class="field input">
+                <label for="confirmpassword">Confirm Password *</label>
+                <input type="confirmpassword" name="confirmpassword" id="confirmpassword" autocomplete="off" required>
+            </div>
+            
 
              <!-- Message display -->
             {% if message %}
@@ -47,14 +53,9 @@
 
             <!-- Links section (sign in link) -->
             <div class="links">
-                Already a member? <a href="log-in">Sign In</a>
-            </div>
+                <p> Already a member? <a href="log-in">Sign In</a></p>            </div>
         </form>
     </div>
 </div>
-
-<!-- Horizontal lines for separation -->
-<h1>------------------------------------------------------------------------</h1>
-<h1>------------------------------------------------------------------------</h1>
 
 {% endblock %}

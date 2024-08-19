@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/images/book.png" type="image/png">
+</head>
+
+<body>
+    <header>
+        <div class="header">
+            <!-- Header name -->
+            <h1>Admin</h1>
+        </div>
+    </header>
+
+    <!-- Navigation bar -->
+    <div class="topnav">
+        <a href="admin">Admin</a>
+        <a href="edit">Change Profile</a>
+        <a href="{{ url_for('logout') }}"> Log Out </a>
+    </div>
+
+    </div>
+
+    <main>
+        <!-- Content block -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Horizontal lines for separation -->
+    <h1>------------------------------------------------------------------------</h1>
+    <h1>------------------------------------------------------------------------</h1>
+
+    <footer>
+        <!-- Footer -->
+        <h3>This is a footer for Peraksana Thayakaran's Project Page. No copyrights here lol</h3>
+    </footer>
+</body>
+</html>

@@ -1,16 +1,9 @@
-{% extends "layout.html" %}
+{% extends "a_layout.html" %}
 {% block content %}
-
-<div class="right-links">
-    <a href="edit">Change Profile</a>
-    <a href="{{ url_for('logout') }}">
-        <button class="btn">Log Out</button>
-    </a>
-</div>
 
 <main>
     <div class="main-box top">
-        <p>Hello <b>{{ name }}</b>, Welcome to the Library</p>
+        <h2>Hello <b>{{ name }}</b>, Welcome to the Library Admin Page</h2>
     </div>
     
     <div class="main-box">
@@ -21,9 +14,4 @@
         <p>And you are <b> {{ age }} years old</b>.</p>
     </div>
 </main>
-
-<!-- Horizontal lines -->
-<h1>------------------------------------------------------------------------</h1>
-<h1>------------------------------------------------------------------------</h1>
-
 {% endblock %}

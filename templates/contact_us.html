@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "u_layout.html" %}
 {% block content %}
     <!-- Title -->
     <h2>Contact Us | Library</h2>
@@ -13,21 +13,26 @@
         <div class="contactlist">
              <!-- name-->
             <label for="fname">First Name</label>
-            <input type="text2" id="fname" name="firstname" placeholder="Your name..">
+            <input type="text2" id="fname" name="firstname" placeholder="Your name.." required>
 
-            <!-- Last mame-->
+            <!-- Last name-->
             <label for="lname">Last Name</label>
-            <input type="text2" id="lname" name="lastname" placeholder="Your last name..">
-            <label for="subject">Subject</label>
+            <input type="text2" id="lname" name="lastname" placeholder="Your last name.." required>
 
+            <!-- email-->
+            <label for="email">Email</label>
+            <input type="text2" id="email" name="email" placeholder="Your email.." required>
+            
             <!-- Subject section-->
-            <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-            <button id="button1" type="submit" onclick="alert('Thank you for your response c:')"> Submit </button>
+            <label for="subject">Subject</label>
+            <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px" required></textarea>
+
+            <!-- Message display -->
+            {% if message %}
+                <p class="message">{{ message }}</p>
+            {% endif %}
+        
+            <button id="button1" type="submit"> Submit </button>
         </div>
     </form>
-    
-     <!-- Separators -->
- <h1>------------------------------------------------------------------------</h1>
- <h1>------------------------------------------------------------------------</h1>
-
 {% endblock %}
