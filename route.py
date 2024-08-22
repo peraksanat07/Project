@@ -1,6 +1,9 @@
 # Import necessary modules and classes from Flask and other libraries
 from flask import Flask, render_template, request, session, redirect, url_for
+from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
+import os
 import sqlite3
 import re
 
@@ -10,6 +13,11 @@ app = Flask(__name__)
 app.config.from_object(Config)
 # Set a secret key for session management
 app.secret_key = "testing secret thing"
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
 # Helper function to interact with the database
 def query_db(query, args=(), one=False):
@@ -34,6 +42,99 @@ def context_processor():
 @app.route('/')
 def homepage():
     return render_template("home.html")
+
+@app.route('/add_database', methods=['GET', 'POST'])
+def add_database():
+    message1 = ''
+    message2 = ''
+    message3 = ''
+    # Handle author submission
+    if 'aname' in request.form and 'a_description' and 'a_image' in request.form:
+        aname = request.form.get('aname')
+        a_description = request.form.get('a_description')
+        a_image = request.form.get('a_image')
+        a_images = "/static/images/author/a_image"
+        if aname and a_description:
+            con = sqlite3.connect(app.config['DATABASE'])
+            cursor = con.cursor()
+            cursor.execute('INSERT INTO Author (name, description, image) VALUES (?, ?, ?)', (aname, a_description, a_images))
+            con.commit()
+            con.close()
+            message1 += ' Author added successfully!'
+
+        # Handle book submission
+    elif 'bname' in request.form and 'blurb' in request.form:
+        bname = request.form.get('bname')
+        blurb = request.form.get('blurb')
+        if bname and blurb:
+            con = sqlite3.connect(app.config['DATABASE'])
+            cursor = con.cursor()
+            cursor.execute('INSERT INTO Books (name, blurb) VALUES (?, ?)', (bname, blurb))
+            con.commit()
+            con.close()
+            message2 += ' Book added successfully!'
+
+        # Handle genre submission
+    elif 'gname' in request.form and 'g_description' in request.form:
+        gname = request.form.get('gname')
+        g_description = request.form.get('g_description')
+        if gname and g_description:
+            con = sqlite3.connect(app.config['DATABASE'])
+            cursor = con.cursor()
+            cursor.execute('INSERT INTO Genre (name, description) VALUES (?, ?)', (gname, g_description))
+            con.commit()
+            con.close()
+            message3 += ' Genre added successfully!'
+
+    return render_template('add_db.html', message1=message1, message2=message2, message3=message3)
+
+
+@app.route('/delete_database', methods=['GET', 'POST'])
+def delete_database():
+    message1 = ''
+    message2 = ''
+    message3 = ''
+    if request.method == 'POST':
+        if 'a_id' in request.form:
+            a_id = request.form.get('a_id')
+            if a_id:
+                con = sqlite3.connect(app.config['DATABASE'])
+                cursor = con.cursor()
+                cursor.execute('DELETE FROM Author WHERE id=?', (a_id,))
+                con.commit()
+                con.close()
+                message1 = 'Author deleted successfully!'
+            else:
+                message1 = 'No ID provided for Author!'
+
+        elif 'b_id' in request.form:
+            b_id = request.form.get('b_id')
+            if b_id:
+                con = sqlite3.connect(app.config['DATABASE'])
+                cursor = con.cursor()
+                cursor.execute('DELETE FROM Books WHERE id=?', (b_id,))
+                con.commit()
+                con.close()
+                message2 = 'Book deleted successfully!'
+            else:
+                message2 = 'No ID provided for Book!'
+
+        elif 'g_id' in request.form:
+            g_id = request.form.get('g_id')
+            if g_id:
+                con = sqlite3.connect(app.config['DATABASE'])
+                cursor = con.cursor()
+                cursor.execute('DELETE FROM Genre WHERE id=?', (g_id,))
+                con.commit()
+                con.close()
+                message3 = 'Genre deleted successfully!'
+            else:
+                message3 = 'No ID provided for Genre!'
+
+
+    # Render the 'admin.html' template
+    return render_template("delete_db.html", message1=message1, message2=message2, message3=message3)
+
 
 # Route for searching content, handles both GET and POST requests
 @app.route('/search', methods=['GET', 'POST'])
@@ -237,13 +338,13 @@ def register():
     return render_template('register.html', message=message)
 
 
-@app.route('/password',  methods=['GET', 'POST'])
+@app.route('/password', methods=['GET', 'POST'])
 def password():
     message = ''
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirmpassword']
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirmpassword')
 
         if not email or not password or not confirm_password:
             message = 'Please fill out the form!'
@@ -253,23 +354,48 @@ def password():
             message = 'Passwords do not match!'
             return render_template("password.html", message=message)
 
-        user = users.query.filter_by(email=email).first()
+        # Validate email format
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            message = 'Invalid email address!'
+            return render_template("password.html", message=message)
+
+        # Connect to the database and check if the user exists
+        con = sqlite3.connect(app.config['DATABASE'])
+        cursor = con.cursor()
+        user = query_db('SELECT * FROM users WHERE Email = ?', (email,), one=True)
+        
         if user:
-            # Update the user's password
-            user.set_password(password)
-            session.commit()  # Save changes to the database
-            message = 'Password updated successfully'
+            # Hash the new password
+            hashed_password = generate_password_hash(password)
+            cursor.execute('UPDATE users SET Password = ? WHERE Email = ?', (hashed_password, email))
+            con.commit()
+            message = 'Password updated successfully!'
         else:
             message = 'User not found'
+        
+        con.close()
 
     return render_template("password.html", message=message)
 
 # Route for the Welcome page (admin dashboard)
 @app.route('/admin')
 def admin():
+    if 'username' in session and 'email' in session and 'age' in session:
+            username = session['username']
+            email = session['email']
+            age = session['age']
+            print(session)
+            return render_template('admin.html', name=username, email=email, age=age)
+    else:
+        # Redirect to login if user is not logged in
+        return redirect(url_for('log_in'))
+
+
+@app.route('/change_database')
+def change_database():
 
     # Render the 'admin.html' template
-    return render_template("admin.html")
+    return render_template("change_db.html")
 
 # Run the application if this script is executed directly
 if __name__ == "__main__":

@@ -1,0 +1,76 @@
+{% extends "a_layout.html" %}
+{% block content %}
+
+<h2> Change Author </h2>
+<!-- Author Form -->
+<div class="contactlist">
+    <form action="/change_database" method="post" enctype="multipart/form-data">
+        <label for="a_id">ID (required)</label>
+        <input type="text2" id="a_id" name="a_id" placeholder="ID..." required>
+
+        <label for="aname">Author Name</label>
+        <input type="text2" id="aname" name="aname" placeholder="Name.." required>
+
+        <label for="a_description">Description</label>
+        <input type="text2" id="a_description" name="a_description" placeholder="Description.." required>
+
+        <button id="button1" type="submit">Submit</button>
+
+        {% if message1 %}
+            <p class="message">{{ message1 }}</p>
+        {% endif %}
+        
+        <label for="a_image">Upload Author Image:</label>
+        <input type="file" id="a_image" name="a_image" accept="image/*">
+    </form>
+</div>
+
+<h2> Change Book </h2>
+
+<!-- Book Form -->
+<div class="contactlist">
+    <form action="/change_database" method="post">
+        <label for="a_id">ID (required)</label>
+        <input type="text2" id="a_id" name="a_id" placeholder="ID..." required>
+
+        <label for="bname">Book Name</label>
+        <input type="text2" id="bname" name="bname" placeholder="Name.." required>
+
+        <label for="blurb">Blurb</label>
+        <input type="text2" id="blurb" name="blurb" placeholder="Blurb.." required>
+
+        <button id="button1" type="submit">Submit</button>
+
+        {% if message2 %}
+            <p class="message2">{{ message2 }}</p>
+        {% endif %}
+
+        <label for="b_image">Upload Book Image:</label>
+        <input type="file" id="b_image" name="b_image" accept="image/*">
+
+    </form>
+</div>
+
+<h2> Change Genre </h2>
+
+<!-- Genre Form -->
+<div class="contactlist">
+    <form action="/change_database" method="post">
+        <label for="a_id">ID (required)</label>
+        <input type="text2" id="a_id" name="a_id" placeholder="ID..." required>
+
+        <label for="gname">Genre Name</label>
+        <input type="text2" id="gname" name="gname" placeholder="Genre Name.." required>
+
+        <label for="description">Description</label>
+        <input type="text2" id="description" name="g_description" placeholder="Description.." required>
+
+        <button id="button1" type="submit">Submit</button>
+
+        {% if message3 %}
+            <p class="message3">{{ message3 }}</p>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
