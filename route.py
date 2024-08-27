@@ -1,14 +1,16 @@
 # Import necessary modules and classes from Flask and other libraries
 from flask import Flask, render_template, request, session, redirect, url_for
+import os
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
-import os
+from flask_bcrypt import Bcrypt
 import sqlite3
 import re
 
 # Create an instance of the Flask class
 app = Flask(__name__)
+bcrypt = Bcrypt(app) 
 # Load configuration settings from Config object
 app.config.from_object(Config)
 # Set a secret key for session management
@@ -49,15 +51,21 @@ def add_database():
     message2 = ''
     message3 = ''
     # Handle author submission
-    if 'aname' in request.form and 'a_description' and 'a_image' in request.form:
+    if 'aname' in request.form and 'a_description' in request.form:
         aname = request.form.get('aname')
         a_description = request.form.get('a_description')
-        a_image = request.form.get('a_image')
-        a_images = "/static/images/author/a_image"
-        if aname and a_description:
+        if 'a_image' not in request.files:
+            message1 += 'No file part'
+        file = request.files['a_image']
+        if file.filename == '':
+            message1 += 'No selected file'
+        if file and allowed_file(file.filename):
+            image_filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'],'author', image_filename))
+        if aname and a_description and image_filename:
             con = sqlite3.connect(app.config['DATABASE'])
             cursor = con.cursor()
-            cursor.execute('INSERT INTO Author (name, description, image) VALUES (?, ?, ?)', (aname, a_description, a_images))
+            cursor.execute('INSERT INTO Author (name, description, image) VALUES (?, ?, ?)', (aname, a_description, os.path.join(app.config['AUTHOR_FOLDER'], image_filename)))
             con.commit()
             con.close()
             message1 += ' Author added successfully!'
@@ -66,10 +74,18 @@ def add_database():
     elif 'bname' in request.form and 'blurb' in request.form:
         bname = request.form.get('bname')
         blurb = request.form.get('blurb')
-        if bname and blurb:
+        if 'b_image' not in request.files:
+            message2 += 'No file part'
+        file = request.files['b_image']
+        if file.filename == '':
+            message2 += 'No selected file'
+        if file and allowed_file(file.filename):
+            image_filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'],'book', image_filename))
+        if bname and blurb and image_filename:
             con = sqlite3.connect(app.config['DATABASE'])
             cursor = con.cursor()
-            cursor.execute('INSERT INTO Books (name, blurb) VALUES (?, ?)', (bname, blurb))
+            cursor.execute('INSERT INTO Books (name, blurb, image) VALUES (?, ?, ?)', (bname, blurb, os.path.join(app.config['BOOK_FOLDER'], image_filename)))
             con.commit()
             con.close()
             message2 += ' Book added successfully!'
@@ -233,11 +249,35 @@ def contact_us():
 
 
 # Route for the Edit Profile page
-@app.route('/edit')
+@app.route('/edit', methods=['GET', 'POST'])
 def edit():
-
-    # Render the 'edit.html' template
-    return render_template("edit.html")
+    message = ''
+    if request.method == 'POST':
+        # Get form data
+        username = request.form['username']
+        email = request.form['email']
+        age = request.form['age']
+        password = request.form['password']
+        confirm_password = request.form['confirmpassword']
+        
+        # Validate form data (for example, check if passwords match)
+        if password != confirm_password:
+            message = 'Passwords do not match!'
+            return redirect(url_for('edit'))
+        user_id = session.get('userid')  # Get the logged-in user's ID from the session
+        if user_id:
+            con = sqlite3.connect(app.config['DATABASE'])
+            cursor = con.cursor()
+            cursor.execute("UPDATE users SET Username = ?, Email = ?, Age = ?, Password = ? WHERE id = ?", (username, email, age, password, id))
+            con.commit()
+            con.close()
+            message = 'Profile updated successfully!'
+            return redirect(url_for('edit'))
+        else:
+            message = 'User not logged in.'
+            return redirect(url_for('log_in'))
+    
+    return render_template('edit.html', message=message)
 
 # Route for listing all genres
 @app.route('/genre')
@@ -265,15 +305,22 @@ def log_in():
     if request.method == 'POST' and all(k in request.form for k in ('username', 'password')):
         # Retrieve username and password from the form
         username, password = request.form['username'], request.form['password']
+        user_password = query_db('SELECT Password FROM users WHERE Username = ?', (username,), one=True)
+        if user_password is None:
+            # Username not found in the database
+            message = 'Username not found. Please try again!'
+        else:
+            user = bcrypt.check_password_hash(user_password[0].encode('utf-8'), password)
         # Query the database for the user with the provided username and password
-        user = query_db('SELECT * FROM users WHERE Username = ? AND Password = ?', (username, password), one=True)
-        if user:
-            # Set session variables for the logged-in user
-            session.update({'loggedin': True, 'userid': user[0], 'name': user[1], 'username': user[1]})
-            message = 'Logged in successfully!'
-            # Render the 'admin.html' template for the admin dashboard
-            return render_template('admin.html', message=message)
-        message = 'Please enter correct email/password!'
+            if user:
+                # Set session variables for the logged-in user
+                user_details = query_db('SELECT * FROM users WHERE Username = ?', (username,), one=True)
+                session.update({'loggedin': True, 'userid': user_details[0], 'name': user_details[1], 'email': user_details[2] , 'age': user_details[3]})
+                message = 'Logged in successfully!'
+                # Render the 'admin.html' template for the admin dashboard
+                return render_template('admin.html', message=message, name=user_details[1], email=user_details[2], age=user_details[3])
+                #return redirect(url_for('admin'))
+            message = 'Please enter correct password!'
     # Render the 'login.html' template with a message
     return render_template('login.html', message=message)
 
@@ -315,8 +362,8 @@ def register():
         account = query_db('SELECT * FROM users WHERE Email = ?', (email,), one=True)
         if account:
             message = 'Account already exists!'
-        elif username:
-            message = 'Username already exists! Please choose another username'
+        # elif username:
+        #     message = 'Username already exists! Please choose another username'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             message = 'Invalid email address!'
         elif age < 16:
@@ -327,7 +374,8 @@ def register():
             message = 'Passwords do not match!'
         else:
             # Insert new user into the database
-            cursor.execute('INSERT INTO users(Username, Email, Password, Age) VALUES(?, ?, ?, ?)', (username, email, password, age,))
+            enc_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            cursor.execute('INSERT INTO users(Username, Email, Password, Age) VALUES(?, ?, ?, ?)', (username, email, enc_password, age,))
             con.commit()
             message = 'You have successfully registered!'
             return render_template('register.html', message=message)
@@ -380,12 +428,12 @@ def password():
 # Route for the Welcome page (admin dashboard)
 @app.route('/admin')
 def admin():
-    if 'username' in session and 'email' in session and 'age' in session:
-            username = session['username']
+    if 'name' in session and 'email' in session and 'age' in session:
+            name = session.get("name")
             email = session['email']
             age = session['age']
             print(session)
-            return render_template('admin.html', name=username, email=email, age=age)
+            return render_template('admin.html', name=name, email=email, age=age)
     else:
         # Redirect to login if user is not logged in
         return redirect(url_for('log_in'))

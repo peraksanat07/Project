@@ -250,7 +250,7 @@ h1 { text-align: center;}
 
 
 footer {
-    position: flex;
+    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;

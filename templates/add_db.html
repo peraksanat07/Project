@@ -14,6 +14,9 @@
 
         <label for="books">Books they have written</label>
         <input type="text2" id="books" name="books" placeholder="Books....." required>
+        
+        <label for="a_image">Upload Author Image:</label>
+        <input type="file" id="a_image" name="a_image" required>
 
         <button id="button1" type="submit">Submit</button>
 
@@ -21,8 +24,6 @@
             <p class="message">{{ message1 }}</p>
         {% endif %}
         
-        <label for="a_image">Upload Author Image:</label>
-        <input type="file" id="a_image" name="a_image" accept="image/*">
     </form>
 </div>
 

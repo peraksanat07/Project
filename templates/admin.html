@@ -3,7 +3,7 @@
 
 <main>
     <div class="main-box top">
-        <h2>Hello <b>{{ username }}</b>, Welcome to the Library Admin Page</h2>
+        <h2>Hello <b>{{ name }}</b>, Welcome to the Library Admin Page</h2>
     </div>
     
     <div class="main-box">
@@ -14,4 +14,26 @@
         <p>And you are <b>{{ age }} years old</b>.</p>
     </div>
 </main>
+
+<h2>Database Table</h2>
+    <table>
+        <thead>
+            <tr>
+                <!-- Replace these with your table's column names -->
+                <th>Column 1</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <!-- Adjust based on the number of columns and data -->
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

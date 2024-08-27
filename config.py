@@ -10,6 +10,8 @@ class Config(object):
     MYSQL_DB = 'user-system'
 
 # File Upload Configuration
-    UPLOAD_FOLDER = 'static/uploads/'  # Folder where images will be stored
+    UPLOAD_FOLDER = '/Users/peraksana/Downloads/Project/static/images/'  # Folder where images will be stored
+    AUTHOR_FOLDER = '/static/images/author'
+    BOOK_FOLDER = '/static/images/book'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # Max file size: 16MB
