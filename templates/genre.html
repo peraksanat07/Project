@@ -22,14 +22,14 @@
 
     <!-- loop -->
     {% for genre in genres %}
-        <div class="text">
             <!-- Link to each genre page -->
-
+        <div class="column">
+            <h2>
                 <a href="/genre/{{ genre[0] }}">
-                    <p class="decor">
                     {{ genre[1] }}
-                    </p>
+                    
                 </a> 
-    </div>
+            </h2>
+        </div>
     {% endfor %}
 {% endblock %}

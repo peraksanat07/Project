@@ -94,7 +94,13 @@ body {
     font-family: "Verdana"; 
     color : #a3c5be ; 
     background-color: #EDf6f9;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    
 }
+
 
 h4 {    color : #EDf6f9 ; 
 }
@@ -169,12 +175,31 @@ p a:hover{
 
 }
 
+h2 a{ 
+  color: #6cad9f ;
+  text-decoration: none;
+
+}
+
+h2 a:hover{ 
+  color: #54857d ;
+  text-decoration: none;
+
+}
+
 h3 a{ 
   color: #a3c5be ;
   text-decoration: none;
 
 }
 
+
+.breaker{ 
+  display: flex;
+  padding: 10px 600px;
+  background: #e29578;
+  max-width: 100%;
+} 
 
  .container {
   position: relative;
@@ -246,11 +271,9 @@ h3 a{
 
 h1 { text-align: center;}
 
-/* this is a navigation bar */
-
 
 footer {
-    position: fixed;
+    margin-top: auto;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -440,93 +463,6 @@ input[type=submit]:hover {
   padding-top: 60px;
 }
 
-
-/* rating */
-:root{
-  --primary-colour: hsl(25, 65%, 76%);
-  --secondary-colour: hsl(25, 83%, 68%);
- 
-  --star-colour: hsl(25, 83%, 68%);
-}
-
-  .container1{
-  position: relative;
-  top: 50%;
-  left: 50%;
-  
-  width: 20%;
-  height: 20%;
-  
-  transform: translate(-50%, -50%) rotateY(180deg);
-} 
-
-.container1 .container__items{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  gap: 0 .5em;
-  
-  width: 100%;
-  height: 100%;
-}
-
-.container1 .container__items input{
-  display: none;
-}
-
-.container1 .container__items label{
-  width: 20%;
-  aspect-ratio: 1;
-  cursor: pointer;
-}
-
-.container1 .container__items label .star-stroke{
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  background: var(--secondary-colour);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-}
-
-.container1 .container__items label .star-stroke .star-fill{
-  width: 70%;
-  aspect-ratio: 1;
-  background: var(--primary-colour);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-}
-
-.container1 .container__items input:hover ~ label .star-stroke,.container .container__items input:checked ~ label .star-stroke{
-  background: var(--star-colour);
-}
-
-.container1 .container__items input:checked ~ label .star-stroke .star-fill{
-  background: var(--star-colour);
-}
-
-.container1 .container__items label:hover .label-description::after{
-  content: attr(data-content);
-  position: fixed;
-  left: 0;
-  right: 0;
-
-  margin-top: 1em;
-  margin-inline: auto;
-
-  width: 100%;
-  height: 2em;
-
-  color: #a3c5be;
-  
-  text-align: center;
-  font-size: 2rem;
-  
-  transform: rotateY(180deg);
-}    
-
-
-
 .error {
   text-align: center;
 }
@@ -666,3 +602,80 @@ input[type=submit]:hover {
     margin-top: 0;
   }
 } 
+
+/* Hide actual radio buttons */
+.tab-radio {
+    display: none;
+}
+
+/* Center the tab-buttons container */
+.tab-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style for tab buttons */
+.tab-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    background-color: #45a8b1;
+    color: #d8e8ff;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tab-button:hover {
+    background-color: #2c7f86;
+}
+
+/* Style for tab content */
+.tab-content {
+    display: none; /* Hide all sections by default */
+    margin: 0 auto; /* Center the content horizontally */
+}
+
+/* Show tab content when its corresponding radio button is checked */
+#tab-books:checked ~ .tab-content#books,
+#tab-genres:checked ~ .tab-content#genres,
+#tab-authors:checked ~ .tab-content#authors {
+    display: block;
+}
+
+/* Style for tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+thead th {
+  background-color: #e27f78;
+  color: #ffe5dc;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #915944;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #915944;
+}
+
+tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+table, th, td {
+  border: 1px solid #915944;
+}
+
+.main-box {
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}

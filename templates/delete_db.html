@@ -6,7 +6,7 @@
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="a_id">ID</label>
-        <input type="number" id="a_id" name="a_id" placeholder="ID..." required>
+        <input type="number" id="a_id" name="a_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
         {% if message1 %}
             <p class="message">{{ message1 }}</p>
@@ -19,7 +19,7 @@
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="b_id">ID</label>
-        <input type="number" id="b_id" name="b_id" placeholder="ID..." required>
+        <input type="number" id="b_id" name="b_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
         {% if message2 %}
             <p class="message">{{ message2 }}</p>
@@ -32,7 +32,7 @@
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="g_id">ID</label>
-        <input type="number" id="g_id" name="g_id" placeholder="ID..." required>
+        <input type="number" id="g_id" name="g_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
         {% if message3 %}
             <p class="message">{{ message3 }}</p>

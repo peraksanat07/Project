@@ -10,8 +10,8 @@
 {% if books %}
     {% for book in books %}
         <!-- Book title and description -->
-	<h3>{{ book[0] }}</h3>
-        <p>{{ book[1] }}</p>
+        <h2><a href="{{ url_for('book_details', id=book[0]) }}">{{ book[1] }}</a></h2>
+        <p>{{ book[2] }}</p>
     {% endfor %}
 {% else %}
     <!-- Message when no books found -->
@@ -27,8 +27,8 @@
 {% if genres %}
     {% for genre in genres %}
         <!-- Genre title and description -->
-        <h3>{{ genre[0] }}</h3>
-	<p>{{ genre[1] }}</p>
+        <h2><a href="{{ url_for('genre_details', id=genre[0]) }}">{{ genre[1] }}</a></h2>
+        <p>{{ genre[2] }}</p>
     {% endfor %}
 {% else %}
     <!-- Message when no genres found -->
@@ -36,7 +36,7 @@
 {% endif %}
 
 <!-- Horizontal line -->
- <h1>------------------------------------------------------------------------</h1>
+<h1>------------------------------------------------------------------------</h1>
 
 <!-- Authors section -->
 <h2>Authors</h2>
@@ -44,9 +44,9 @@
 {% if authors %}
     <ul>
     {% for author in authors %}
-	<!-- Author name and description -->
-	<h3>{{ author[0] }}</h3>
-        <p>{{ author[1] }}</p>
+        <!-- Author name and description -->
+        <h2><a href="{{ url_for('author_details', id=author[0]) }}">{{ author[1] }}</a></h2>
+        <p>{{ author[2] }}</p>
     {% endfor %}
     </ul>
 {% else %}

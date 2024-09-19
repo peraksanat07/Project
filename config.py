@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+
 class Config(object):
     TITLE = 'Library'
     DATABASE = 'project.db'
@@ -10,8 +13,14 @@ class Config(object):
     MYSQL_DB = 'user-system'
 
 # File Upload Configuration
-    UPLOAD_FOLDER = '/Users/peraksana/Downloads/Project/static/images/'  # Folder where images will be stored
+    UPLOAD_FOLDER = '/Users/peraksana/Downloads/Project/static/images/'
+    # Folder where images will be stored
     AUTHOR_FOLDER = '/static/images/author'
     BOOK_FOLDER = '/static/images/book'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # Max file size: 16MB
+
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'

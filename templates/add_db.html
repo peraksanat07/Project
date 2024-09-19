@@ -6,15 +6,15 @@
 <div class="contactlist">
     <form action="/add_database" method="post" enctype="multipart/form-data">
         <label for="aname">Author Name</label>
-        <input type="text2" id="aname" name="aname" placeholder="Name.." required>
+        <input type="text2" id="aname" name="aname" placeholder="Name.." required maxlength="25">
 
         <label for="a_description">Description</label>
-        <input type="text2" id="a_description" name="a_description" placeholder="Description.." required>
+        <input type="text2" id="a_description" name="a_description" placeholder="Description.." required maxlength="250">
 
 
         <label for="books">Books they have written</label>
-        <input type="text2" id="books" name="books" placeholder="Books....." required>
-        
+        <input type="text2" id="books" name="books" placeholder="Books....." required maxlength="25">
+
         <label for="a_image">Upload Author Image:</label>
         <input type="file" id="a_image" name="a_image" required>
 
@@ -33,13 +33,18 @@
 <div class="contactlist">
     <form action="/add_database" method="post" enctype="multipart/form-data">
         <label for="bname">Book Name</label>
-        <input type="text2" id="bname" name="bname" placeholder="Name.." required>
+        <input type="text2" id="bname" name="bname" placeholder="Name.." required maxlength="25">
 
         <label for="blurb">Blurb</label>
-        <input type="text2" id="blurb" name="blurb" placeholder="Blurb.." required>
+        <input type="text2" id="blurb" name="blurb" placeholder="Blurb.." required maxlength="250">
 
-        <label for="author">Books author</label>
-        <input type="text2" id="author" name="author" placeholder="Author....." required>
+        <label for="authors">Select Author(s)</label>
+            <select id="authors" name="authors" multiple>
+                {% for author in authors %}
+                    <option value="{{ Author.id }}">{{ Author.name }}</option>
+                {% endfor %}
+            </select>
+
 
         <button id="button1" type="submit">Submit</button>
 
@@ -59,10 +64,10 @@
 <div class="contactlist">
     <form action="/add_database" method="post">
         <label for="gname">Genre Name</label>
-        <input type="text2" id="gname" name="gname" placeholder="Genre Name.." required>
+        <input type="text2" id="gname" name="gname" placeholder="Genre Name.." required maxlength="25">
 
         <label for="description">Description</label>
-        <input type="text2" id="g_description" name="g_description" placeholder="Description.." required>
+        <input type="text2" id="g_description" name="g_description" placeholder="Description.." required maxlength="250">
 
         <button id="button1" type="submit">Submit</button>
 

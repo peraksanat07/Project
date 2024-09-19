@@ -4,7 +4,6 @@
 <h2>Register | Library</h2>
 <h3>For Admin Only</h3>
 
-
 <!-- Main content container -->
 <div class="container">
     <div class="box form-box">
@@ -17,31 +16,34 @@
             <!-- Username input field -->
             <div class="field input">
                 <label for="username">Username</label>
-                <input type="text" name="username" id="username" autocomplete="off" required>
+                <input type="text" name="username" id="username" autocomplete="off" required value="{{ request.form.username }}" maxlength="25">
             </div>
+
             <!-- Email input field -->
             <div class="field input">
                 <label for="email">Email</label>
-                <input type="text" name="email" id="email" autocomplete="off" required>
+                <input type="text" name="email" id="email" autocomplete="off" required value="{{ request.form.email }}" maxlength="25">
             </div>
+
             <!-- Age input field -->
             <div class="field input">
                 <label for="age">Age (Must be 16 or over)</label>
-                <input type="number" name="age" id="age" autocomplete="off" required>
+                <input type="number" name="age" id="age" autocomplete="off" required value="{{ request.form.age }}" maxlength="3">
             </div>
+
             <!-- Password input field -->
             <div class="field input">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" autocomplete="off" required>
+                <input type="password" name="password" id="password" autocomplete="off" required maxlength="10">
             </div>
-             <!-- Password input field -->
+
+            <!-- Confirm Password input field -->
             <div class="field input">
                 <label for="confirmpassword">Confirm Password *</label>
-                <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required>
+                <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required maxlength="10">
             </div>
-            
 
-             <!-- Message display -->
+            <!-- Message display -->
             {% if message %}
                 <p class="message">{{ message }}</p>
             {% endif %}
@@ -53,7 +55,8 @@
 
             <!-- Links section (sign in link) -->
             <div class="links">
-                <p> Already a member? <a href="log-in">Sign In</a></p>            </div>
+                <p>Already a member? <a href="log-in">Sign In</a></p>
+            </div>
         </form>
     </div>
 </div>
