@@ -7,6 +7,10 @@ from config import Config
 from flask_bcrypt import Bcrypt
 import sqlite3
 import re
+from itsdangerous import URLSafeTimedSerializer
+import smtplib
+from email.mime.text import MIMEText
+
 
 # Create an instance of the Flask class
 app = Flask(__name__)
@@ -15,8 +19,6 @@ bcrypt = Bcrypt(app)
 app.config.from_object(Config)
 # Set a secret key for session management
 app.secret_key = "testing secret thing"
-
-MAX_INPUT_LENGTH = 50
 
 
 @app.before_request
@@ -28,6 +30,107 @@ def make_session_permanent():
 def enforce_https():
     if not request.is_secure and not app.debug:
         return redirect(request.url.replace("http://", "https://"))
+
+
+def generate_token(email):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    return serializer.dumps(email, salt=os.getenv("SALT"))
+
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    try:
+        email = serializer.loads(
+            token, salt=os.getenv("SALT"), max_age=expiration
+        )
+        return email
+    except Exception:
+        return False
+
+
+def mail(email, token):
+    try:
+        receiver = email
+        sender = 'projectlibrary91@gmail.com'
+        # uses app password for more security
+        password = 'frcpnkdvjdgebxyy'
+        subject = "Reset password in the  system"
+        senderName = "System"
+
+        smtpserver = smtplib.SMTP('smtp.gmail.com', 587)
+        smtpserver.starttls()
+        smtpserver.login(sender, password)
+        reset_link = url_for("reset_password", token=token, _external=True)
+        # mail body
+        mail_body = """
+        Dear User,
+        You can reset your password by clicking on the link below:
+        {0}
+        If you did not request this, please ignore this email.
+        """.format(reset_link)
+
+        # compose email
+        msg = MIMEText(mail_body)
+
+        msg['Subject'] = subject
+        msg['From'] = senderName + " <%s>" % sender
+        msg['To'] = receiver
+        # send email
+        smtpserver.sendmail(sender, [receiver], msg.as_string())
+        smtpserver.quit()
+        return True
+    except Exception:
+        return False
+
+
+@app.route('/password', methods=['GET', 'POST'])
+def password():
+    message = ''
+    if request.method == 'POST':
+        email = request.form.get("email")
+        con = sqlite3.connect(app.config['DATABASE'])
+        cursor = con.cursor()
+        user = cursor.execute('SELECT * FROM users WHERE Email = ?', (email,)).fetchone()
+
+        if user:
+            token = generate_token(email)
+            mailed = mail(email, token)
+            if mailed:
+                message = f"The password reset link has been sent to {email}."
+            else:
+                message = "Couldn't send the reset link. Please try again."
+        else:
+            message = "This email does not exist in our records."
+        con.close()
+
+    return render_template("password.html", message=message)
+
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    message = ''
+    token = request.args.get("token")
+    if request.method == "GET":
+        email = confirm_token(token)
+        if email:
+            return render_template("reset_password.html", email=email, token=token, message=message)
+        else:
+            return render_template('error.html')
+# check if this part works because it isn't???
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirmpassword")
+
+        if password != confirm_password:
+            message = "Passwords do not match."
+            return redirect(url_for("reset_password", token=token))
+
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        update_db('UPDATE users SET Password = ? WHERE Email = ?', (hashed_password, email))
+        message = f"Password successfully updated for {email}."
+        # return redirect(url_for('log_in'))
+    return render_template("error.html", message="Something went wrong. Please try again.")
 
 
 def ensure_logged_in_or_error():
@@ -61,7 +164,20 @@ def query_db(query, args=(), one=False):
     return (answer[0] if answer else None) if one else answer
 
 
-def truncate_text(text, max_length=MAX_INPUT_LENGTH):
+# Helper function to interact with the database
+def update_db(query, args=()):
+    # Connect to the database using the path specified in the config
+    con = sqlite3.connect(app.config['DATABASE'])
+    cur = con.cursor()
+    answer = cur.execute(query, args)
+    con.commit()
+    cur.close()
+    con.close()
+    # Return the first result if 'one' is True, otherwise return all results
+    return answer
+
+
+def truncate_text(text, max_length=50):
     if len(text) > max_length:
         return text[:max_length] + '...'
     return text
@@ -96,7 +212,7 @@ def search():
                                    authors=[])
         print(f"Search term: {search_term}")
         truncated_term = truncate_text(search_term,
-                                       max_length=MAX_INPUT_LENGTH)
+                                       max_length=50)
         # Define SQL queries for searching Books, Genre, and Author tables
         search_queries = [
             ("SELECT id, name, blurb FROM Books WHERE name LIKE ?", '%' +
@@ -290,6 +406,11 @@ def register():
             message = 'Age must be a number!'
             return render_template('register.html', message=message,
                                    username=username, email=email, age=age)
+        if int(age) > 100 or int(age) < 16:
+            message = 'age must be between 16 and 100'
+            return render_template('register.html', message=message,
+                                   username=username, email=email, age=age)
+
         con = sqlite3.connect('project.db')
         cursor = con.cursor()
         # Check if an account with the provided email already exists
@@ -297,12 +418,6 @@ def register():
                            one=True)
         if account:
             message = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            message = 'Invalid email address!'
-        elif age < 16:
-            message = 'You are not old enough to register'
-        elif not username or not password or not email or not age:
-            message = 'Please fill out the form!'
         elif password != confirmpassword:
             message = 'Passwords do not match!'
         else:
@@ -319,46 +434,6 @@ def register():
     # Render the 'register.html' template with a message and form data
     return render_template('register.html', message=message,
                            username=username, email=email, age=age)
-
-
-@app.route('/password', methods=['GET', 'POST'])
-def password():
-    message = ''
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirmpassword')
-
-        if not email or not password or not confirm_password:
-            message = 'Please fill out the form!'
-            return render_template("password.html", message=message)
-
-        if password != confirm_password:
-            message = 'Passwords do not match!'
-            return render_template("password.html", message=message)
-
-        # Validate email format
-        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            message = 'Invalid email address!'
-            return render_template("password.html", message=message)
-
-        # Connect to the database and check if the user exists
-        con = sqlite3.connect(app.config['DATABASE'])
-        cursor = con.cursor()
-        user = query_db('SELECT * FROM users WHERE Email = ?', (email,),
-                        one=True)
-        if user:
-            # Hash the new password
-            hashed_password = generate_password_hash(password)
-            cursor.execute('UPDATE users SET Password = ? WHERE Email = ?',
-                           (hashed_password, email))
-            con.commit()
-            message = 'Password updated successfully!'
-        else:
-            message = 'User not found'
-        con.close()
-
-    return render_template("password.html", message=message)
 
 
 # Route for the Welcome page (admin dashboard)
@@ -402,51 +477,38 @@ def edit():
     if result:
         return result
     message = ''
+    name = session.get("name")
     if request.method == 'POST':
         # Get form data
-        username = request.form['username']
         email = request.form['email']
         age = request.form['age']
         password = request.form['password']
         confirm_password = request.form['confirmpassword']
-
+        if int(age) > 100 or int(age) < 16:
+            message = 'You are out of age range to register'
+            return render_template('edit.html', name=name, age=age, email=email, message=message)
         # Validate form data (e.g., check if passwords match)
         if password != confirm_password:
             message = 'Passwords do not match!'
-            return render_template('edit.html', message=message)
+            return render_template('edit.html', name=name, message=message)
 
         user_id = session.get('userid')
 
         if user_id:
-            # Connect to the database
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-
             # Check if the new username or email is already taken
-            cursor.execute("SELECT id FROM users WHERE (Username = ? OR Email = ?) AND id != ?", 
-                           (username, email, user_id))
-            existing_user = cursor.fetchone()
-
+            existing_user = query_db('SELECT * FROM users WHERE Username = ?', (name,),
+                           one=True)
             if existing_user:
-                message = 'Username or email already in use!'
-                con.close()
-                return render_template('edit.html', message=message)
+                # Hash the new password
+                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                # Update the user's information
+                update_db("UPDATE users SET Email = ?, Age = ?, Password = ? WHERE id = ?",
+                                (email, int(age), hashed_password, user_id))
+                message = 'Profile updated successfully!'
+            else:
+                message = 'User not valid.'
 
-            # Hash the new password
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-            # Update the user's information
-            cursor.execute("UPDATE users SET Username = ?, Email = ?, Age = ?, Password = ? WHERE id = ?",
-                           (username, email, age, hashed_password, user_id))
-            con.commit()
-            con.close()
-
-            message = 'Profile updated successfully!'
-        else:
-            message = 'User not logged in.'
-            return redirect(url_for('log_in'))
-
-    return render_template('edit.html', message=message)
+    return render_template('edit.html', name=name, message=message)
 
 
 @app.route('/delete_account', methods=['POST'])
@@ -455,24 +517,13 @@ def delete_account():
     result = ensure_logged_in_or_error()
     if result:
         return result
-
     user_id = session.get('userid')
-
     if user_id:
-        # Connect to the database
-        con = sqlite3.connect(app.config['DATABASE'])
-        cursor = con.cursor()
-
         # Delete the user's account
-        cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
-        con.commit()
-        con.close()
-
+        update_db("DELETE FROM users WHERE id = ?", (user_id,))
         # Log the user out
         session.pop('userid', None)
-
         return redirect(url_for('log_in'))
-
     return redirect(url_for('edit'))
 
 
@@ -480,6 +531,8 @@ def delete_account():
 def add_database():
     # Check if user is logged in
     result = ensure_logged_in_or_error()
+    authors = query_db("SELECT * FROM Author", (),)
+    genres = query_db("SELECT * FROM Genre", (),)
     if result:
         return result
     message1 = ''
@@ -499,21 +552,19 @@ def add_database():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'],
                                    'author', image_filename))
         if aname and a_description and image_filename:
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-            cursor.execute('INSERT INTO Author (name, description, image) \
+            update_db('INSERT INTO Author (name, description, image) \
                            VALUES (?, ?, ?)', (aname, a_description,
                                                os.path.join(app.config
                                                             ['AUTHOR_FOLDER'],
                                                             image_filename)))
-            con.commit()
-            con.close()
             message1 += ' Author added successfully!'
 
         # Handle book submission
     elif 'bname' in request.form and 'blurb' in request.form:
         bname = request.form.get('bname')
         blurb = request.form.get('blurb')
+        author_ids = request.form.getlist('authors')
+        genre_ids = request.form.getlist('genres')
         if 'b_image' not in request.files:
             message2 += 'No file part'
         file = request.files['b_image']
@@ -524,15 +575,23 @@ def add_database():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'],
                                    'book', image_filename))
         if bname and blurb and image_filename:
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-            cursor.execute('INSERT INTO Books (name, blurb, image) \
+            update_db('INSERT INTO Books (name, blurb, image) \
                            VALUES (?, ?, ?)', (bname, blurb,
                                                os.path.join(app.config
                                                             ['BOOK_FOLDER'],
                                                             image_filename)))
-            con.commit()
-            con.close()
+            # Get the ID of the newly inserted book
+            book_id = query_db('SELECT last_insert_rowid()', one=True)[0]
+
+            # Insert into BookAuthor association table
+            for author_id in author_ids:
+                update_db('INSERT INTO book_author (book, author) VALUES (?, ?)',
+                          (book_id, author_id))
+
+            # Insert into BookGenre association table
+            for genre_id in genre_ids:
+                update_db('INSERT INTO book_genre (book, genre) VALUES (?, ?)',
+                          (book_id, genre_id))
             message2 += ' Book added successfully!'
 
         # Handle genre submission
@@ -540,18 +599,14 @@ def add_database():
         gname = request.form.get('gname')
         g_description = request.form.get('g_description')
         if gname and g_description:
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-            cursor.execute('INSERT INTO Genre (name, description) \
+            update_db('INSERT INTO Genre (name, description) \
                            VALUES (?, ?)', (gname, g_description))
-            con.commit()
-            con.close()
             message3 += ' Genre added successfully!'
 
     return render_template('add_db.html',
                            message1=message1,
                            message2=message2,
-                           message3=message3)
+                           message3=message3, authors=authors, genres=genres)
 
 
 @app.route('/delete_database', methods=['GET', 'POST'])
@@ -567,11 +622,7 @@ def delete_database():
         if 'a_id' in request.form:
             a_id = request.form.get('a_id')
             if a_id:
-                con = sqlite3.connect(app.config['DATABASE'])
-                cursor = con.cursor()
-                cursor.execute('DELETE FROM Author WHERE id=?', (a_id,))
-                con.commit()
-                con.close()
+                update_db('DELETE FROM Author WHERE id=?', (a_id,))
                 message1 = 'Author deleted successfully!'
             else:
                 message1 = 'No ID provided for Author!'
@@ -579,11 +630,7 @@ def delete_database():
         elif 'b_id' in request.form:
             b_id = request.form.get('b_id')
             if b_id:
-                con = sqlite3.connect(app.config['DATABASE'])
-                cursor = con.cursor()
-                cursor.execute('DELETE FROM Books WHERE id=?', (b_id,))
-                con.commit()
-                con.close()
+                update_db('DELETE FROM Books WHERE id=?', (b_id,))
                 message2 = 'Book deleted successfully!'
             else:
                 message2 = 'No ID provided for Book!'
@@ -591,11 +638,7 @@ def delete_database():
         elif 'g_id' in request.form:
             g_id = request.form.get('g_id')
             if g_id:
-                con = sqlite3.connect(app.config['DATABASE'])
-                cursor = con.cursor()
-                cursor.execute('DELETE FROM Genre WHERE id=?', (g_id,))
-                con.commit()
-                con.close()
+                update_db('DELETE FROM Genre WHERE id=?', (g_id,))
                 message3 = 'Genre deleted successfully!'
             else:
                 message3 = 'No ID provided for Genre!'
@@ -632,23 +675,15 @@ def change_database():
                 image_path = os.path.join(app.config['AUTHOR_FOLDER'],
                                           image_filename)
                 # Update with new image
-                con = sqlite3.connect(app.config['DATABASE'])
-                cursor = con.cursor()
-                cursor.execute('UPDATE Author SET name=?, description=?, image=? WHERE id=?',
+                update_db('UPDATE Author SET name=?, description=?, image=? WHERE id=?',
                                (aname, a_description, image_path, a_id))
-                con.commit()
-                con.close()
                 message1 = 'Author updated successfully!'
             else:
                 message1 = 'Invalid file type for Author image!'
         else:
             # Update without image
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-            cursor.execute('UPDATE Author SET name=?, description=? WHERE id=?',
+            update_db('UPDATE Author SET name=?, description=? WHERE id=?',
                            (aname, a_description, a_id))
-            con.commit()
-            con.close()
             message1 = 'Author updated successfully without new image!'
 
     # Handle book update
@@ -665,23 +700,15 @@ def change_database():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'book', image_filename))
                 image_path = os.path.join(app.config['BOOK_FOLDER'], image_filename)
                 # Update with new image
-                con = sqlite3.connect(app.config['DATABASE'])
-                cursor = con.cursor()
-                cursor.execute('UPDATE Books SET name=?, blurb=?, image=? WHERE id=?',
+                update_db('UPDATE Books SET name=?, blurb=?, image=? WHERE id=?',
                                (bname, blurb, image_path, b_id))
-                con.commit()
-                con.close()
                 message2 = 'Book updated successfully!'
             else:
                 message2 = 'Invalid file type for Book image!'
         else:
             # Update without image
-            con = sqlite3.connect(app.config['DATABASE'])
-            cursor = con.cursor()
-            cursor.execute('UPDATE Books SET name=?, blurb=? WHERE id=?',
+            update_db('UPDATE Books SET name=?, blurb=? WHERE id=?',
                            (bname, blurb, b_id))
-            con.commit()
-            con.close()
             message2 = 'Book updated successfully without new image!'
 
     # Handle genre update
@@ -689,13 +716,8 @@ def change_database():
         g_id = request.form.get('g_id')
         gname = request.form.get('gname')
         g_description = request.form.get('g_description')
-
-        con = sqlite3.connect(app.config['DATABASE'])
-        cursor = con.cursor()
-        cursor.execute('UPDATE Genre SET name=?, description=? WHERE id=?',
+        update_db('UPDATE Genre SET name=?, description=? WHERE id=?',
                        (gname, g_description, g_id))
-        con.commit()
-        con.close()
         message3 = 'Genre updated successfully!'
 
     return render_template('change_db.html',

@@ -11,19 +11,19 @@
                 <!-- Username field -->
                 <div class="field input">
                     <label for="username">Username</label>
-                    <input type="text" name="username" id="username" autocomplete="off" required>
+                    <input type="text" name="username" id="username" autocomplete="off" disabled value="{{ name }}">
                 </div>
                 
                 <!-- Email field -->
                 <div class="field input">
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" autocomplete="off" required>
+                    <input type="text" name="email" id="email" autocomplete="off" required value="{{ email }}">
                 </div>
                 
                 <!-- Age field -->
                 <div class="field input">
                     <label for="age">Age</label>
-                    <input type="number" name="age" id="age" autocomplete="off" required>
+                    <input type="text" name="age" id="age" autocomplete="off" required value="{{ age }}" maxlength="3">
                 </div>
 
                 <!-- Age field -->

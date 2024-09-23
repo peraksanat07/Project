@@ -11,10 +11,6 @@
         <label for="a_description">Description</label>
         <input type="text2" id="a_description" name="a_description" placeholder="Description.." required maxlength="250">
 
-
-        <label for="books">Books they have written</label>
-        <input type="text2" id="books" name="books" placeholder="Books....." required maxlength="25">
-
         <label for="a_image">Upload Author Image:</label>
         <input type="file" id="a_image" name="a_image" required>
 
@@ -39,9 +35,16 @@
         <input type="text2" id="blurb" name="blurb" placeholder="Blurb.." required maxlength="250">
 
         <label for="authors">Select Author(s)</label>
-            <select id="authors" name="authors" multiple>
+            <select id="authors" name="authors">
                 {% for author in authors %}
-                    <option value="{{ Author.id }}">{{ Author.name }}</option>
+                    <option value="{{ author[0] }}">{{ author[1]}}</option>
+                {% endfor %}
+            </select>
+
+            <label for="genres">Select Genre(s)</label>
+            <select id="genres" name="genres" multiple>
+                {% for genre in genres %}
+                    <option value="{{ genre[0] }}">{{ genre[1]}}</option>
                 {% endfor %}
             </select>
 
@@ -53,7 +56,7 @@
         {% endif %}
 
         <label for="b_image">Upload Book Image:</label>
-        <input type="file" id="b_image" name="b_image" accept="image/*">
+        <input type="file" id="b_image" name="b_image" accept="image/*" required>
 
     </form>
 </div>
