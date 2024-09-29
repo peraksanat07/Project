@@ -17,7 +17,7 @@
                 <!-- Email field -->
                 <div class="field input">
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" autocomplete="off" required value="{{ email }}">
+                    <input type="email" name="email" id="email" autocomplete="off" required value="{{ email }}" maxlength="50">
                 </div> <!-- class="field input" -->
                 
                 <!-- Age field -->
@@ -29,12 +29,12 @@
                 <!-- Age field -->
                 <div class="field input">
                     <label for="password">password</label>
-                    <input type="password" name="password" id="password" autocomplete="off" required>
+                    <input type="password" name="password" id="password" autocomplete="off" required minlength="8" maxlength="10">
                 </div> <!-- class="field input" -->
 
                 <div class="field input">
                     <label for="confirmpassword"> Confirm Password</label>
-                    <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required>
+                    <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required minlength="8" maxlength="10">
                 </div> <!-- class="field input" -->
                 
                 <!-- Message display -->

@@ -22,21 +22,20 @@ app.secret_key = "testing secret thing"
 
 @app.before_request
 def make_session_permanent():
+    # function is executed before each request to the application for admin.
+    # It sets the session to be permanent, meaning the session will last
+    # until the user explicitly logs out or the session timeout occurs.
     session.permanent = True
 
 
-@app.before_request
-def enforce_https():
-    if not request.is_secure and not app.debug:
-        return redirect(request.url.replace("http://", "https://"))
-
-
 def generate_token(email):
+    # Generate a secure token for the given email
     serializer = URLSafeTimedSerializer(app.secret_key)
     return serializer.dumps(email, salt=os.getenv("SALT"))
 
 
 def confirm_token(token, expiration=3600):
+    # Confirm the token and return the email if valid
     serializer = URLSafeTimedSerializer(app.secret_key)
     try:
         email = serializer.loads(
@@ -48,6 +47,7 @@ def confirm_token(token, expiration=3600):
 
 
 def mail(email, token):
+    # Send an email containing a reset password link
     try:
         receiver = email
         sender = 'projectlibrary91@gmail.com'
@@ -65,6 +65,7 @@ def mail(email, token):
         Dear User,
         You can reset your password by clicking on the link below:
         {0}
+        Note that this may not work due to local hosts on different laptops.
         If you did not request this, please ignore this email.
         """.format(reset_link)
 
@@ -82,65 +83,14 @@ def mail(email, token):
         return False
 
 
-@app.route('/password', methods=['GET', 'POST'])
-def password():
-    message = ''
-    if request.method == 'POST':
-        email = request.form.get("email")
-        con = sqlite3.connect(app.config['DATABASE'])
-        cursor = con.cursor()
-        user = cursor.execute('SELECT * FROM users WHERE Email = ?',
-                              (email,)).fetchone()
-
-        if user:
-            token = generate_token(email)
-            mailed = mail(email, token)
-            if mailed:
-                message = f"The password reset link has been sent to {email}."
-            else:
-                message = "Couldn't send the reset link. Please try again."
-        else:
-            message = "This email does not exist in our records."
-        con.close()
-
-    return render_template("password.html", message=message)
-
-
-@app.route("/reset_password", methods=["GET", "POST"])
-def reset_password():
-    message = ''
-    token = request.args.get("token")
-    if request.method == "GET":
-        email = confirm_token(token)
-        if email:
-            return render_template("reset_password.html", email=email,
-                                   token=token, message=message)
-        else:
-            return render_template('error.html')
-# check if this part works because it isn't???
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirmpassword")
-
-        if password != confirm_password:
-            message = "Passwords do not match."
-            return redirect(url_for("reset_password", token=token))
-
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        update_db('UPDATE users SET Password = ? WHERE Email = ?',
-                  (hashed_password, email))
-        message = f"Password successfully updated for {email}."
-        # return redirect(url_for('log_in'))
-    return render_template("error.html")
-
-
 def ensure_logged_in_or_error():
+    # Ensure the user is logged in or return an error page
     if 'userid' not in session:
         return render_template('error.html')
 
 
 def allowed_file(filename):
+    # Check if the file has an allowed extension
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in \
         app.config['ALLOWED_EXTENSIONS']
 
@@ -178,18 +128,28 @@ def update_db(query, args=()):
     cur.close()
 
 
-def update_db_with_last_id(query, args=()):
+def update_last_id(query, args=()):
+    # Executes the given SQL query and returns the ID of the last row inserted.
+    # It connects to the database, executes the query with provided arguments,
+    # commits the transaction to make the changes persistent, and retrieves
+    # the ID of the last row that was inserted using `lastrowid`.
     db = get_db()
     cur = db.execute(query, args)
     db.commit()
+    # Get the ID of the last inserted row
     last_id = cur.lastrowid
     cur.close()
     return last_id
 
 
 def truncate_text(text, max_length=50):
+    # Truncates the given text to a specified maximum length, appending '...'
+    # if the text exceeds the max length. This function ensures that long
+    # text strings are shortened for display purposes.
     if len(text) > max_length:
+        # Return truncated text with ellipsis
         return text[:max_length] + '...'
+    # Return text as is if within the max length
     return text
 
 
@@ -264,7 +224,8 @@ def author_details(id):
         if author:
             # Query the database for books associated with the author
             books = query_db("SELECT id, name FROM Books WHERE id IN \
-                            (SELECT book FROM book_author WHERE author=?)", (id,))
+                            (SELECT book FROM book_author WHERE author=?)",
+                             (id,))
             # Render the 'a_details.html' template with author and book details
             return render_template("a_details.html", author=author,
                                    books=books)
@@ -358,8 +319,9 @@ def log_in():
             # Username not found in the database
             message = 'Username not found. Please try again!'
         else:
-            user = bcrypt.check_password_hash(user_password[0].encode('utf-8'),
-                                              password)
+            pw_hash = bcrypt.generate_password_hash(password, 10)
+            user = bcrypt.check_password_hash(pw_hash, password)
+
         # Query the database for user with the provided username and password
             if user:
                 # Set session variables for the logged-in user
@@ -408,7 +370,6 @@ def register():
         password = request.form['password']
         confirmpassword = request.form['confirmpassword']
         email = request.form['email']
-
         try:
             # Validate age input
             age = int(request.form['age'])
@@ -416,11 +377,11 @@ def register():
             message = 'Age must be a number!'
             return render_template('register.html', message=message,
                                    username=username, email=email, age=age)
+        # age range check
         if int(age) > 100 or int(age) < 16:
             message = 'age must be between 16 and 100'
             return render_template('register.html', message=message,
                                    username=username, email=email, age=age)
-
         con = sqlite3.connect('project.db')
         cursor = con.cursor()
         # Check if an account with the provided email already exists
@@ -432,7 +393,8 @@ def register():
             message = 'Passwords do not match!'
         else:
             # Insert new user into the database
-            enc_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            enc_password = bcrypt.generate_password_hash(password, 10)
+
             cursor.execute('INSERT INTO users(Username, Email, Password, Age)\
                             VALUES(?, ?, ?, ?)', (username, email,
                                                   enc_password, age,))
@@ -453,6 +415,7 @@ def admin():
     result = ensure_logged_in_or_error()
     if result:
         return result
+    # Check if 'name', 'email', and 'age' exist in the session
     if 'name' in session and 'email' in session and 'age' in session:
         name = session.get("name")
         email = session['email']
@@ -464,21 +427,12 @@ def admin():
             ("SELECT id, name, description FROM Genre", ()),
             ("SELECT id, name, description FROM Author", ())
         ]
-
+        # Execute each query in the list and store results
         results = [query_db(query, param) for query, param in search_queries]
 
         return render_template('admin.html', name=name, email=email, age=age,
                                books=results[0], genres=results[1],
                                authors=results[2])
-
-
-@app.after_request
-def add_cache_control_headers(response):
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, \
-                                        post-check=0, pre-check=0, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '-1'
-    return response
 
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -488,13 +442,15 @@ def edit():
     if result:
         return result
     message = ''
+    # Get the username from the session
     name = session.get("name")
     if request.method == 'POST':
-        # Get form data
+        # Get form data submitted by the user
         email = request.form['email']
         age = request.form['age']
         password = request.form['password']
         confirm_password = request.form['confirmpassword']
+        # Check if the age is within the allowed range
         if int(age) > 100 or int(age) < 16:
             message = 'You are out of age range to register'
             return render_template('edit.html', name=name, age=age,
@@ -503,24 +459,109 @@ def edit():
         if password != confirm_password:
             message = 'Passwords do not match!'
             return render_template('edit.html', name=name, message=message)
-
+        # Get the user ID from the session
         user_id = session.get('userid')
 
         if user_id:
             # Check if the new username or email is already taken
-            existing_user = query_db('SELECT * FROM users WHERE Username = ?', (name,),
+            existing_user = query_db('SELECT * FROM users WHERE Username = ?',
+                                     (name,),
                                      one=True)
             if existing_user:
-                # Hash the new password
-                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                # Hash the new password using bcrypt
+                hashed_password = bcrypt.generate_password_hash(password, 10)
                 # Update the user's information
-                update_db("UPDATE users SET Email = ?, Age = ?, Password = ? WHERE id = ?",
-                                (email, int(age), hashed_password, user_id))
+                update_db("UPDATE users SET Email = ?, Age = ?, Password = ? \
+                          WHERE id = ?",
+                          (email, int(age), hashed_password, user_id))
                 message = 'Profile updated successfully!'
+                # Success message
             else:
+                # If user does not exist, show error
                 message = 'User not valid.'
 
     return render_template('edit.html', name=name, message=message)
+
+
+@app.route('/password', methods=['GET', 'POST'])
+def password():
+    # Handle the password reset request
+    message = ''
+    if request.method == 'POST':
+        # Get the email address from the form.
+        email = request.form.get("email")
+        con = sqlite3.connect(app.config['DATABASE'])
+        cursor = con.cursor()
+        # Check if the email exists in the 'users' table.
+        user = cursor.execute('SELECT * FROM users WHERE Email = ?',
+                              (email,)).fetchone()
+
+        if user:
+            # Generate a password reset token for the user.
+            token = generate_token(email)
+            # Send the reset link via email.
+            mailed = mail(email, token)
+            # If the email is sent successfully, notify the user
+            if mailed:
+                # If there was an issue sending the email, show error message
+                message = f"The password reset link has been sent to {email}."
+            else:
+                # If the email doesn't exist in the database, show error
+                message = "Couldn't send the reset link. Please try again."
+        else:
+            message = "This email does not exist in our records."
+        con.close()
+    # Render the password reset page with a message (success or error)
+    return render_template("password.html", message=message)
+
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_password():
+    # Initialize the message variable
+    message = ''
+    # Get the token from the URL parameters
+    token = request.args.get("token")
+    # If there is no token, render the error page
+    if not token:
+        return render_template('error.html')
+    # If the request method is GET (when the user first visits the page)
+    if request.method == "GET":
+        # Confirm and decode the token to get the email
+        email = confirm_token(token)
+        # Store the email in session to use in the POST request
+        session['reset_email'] = email
+        # If the email is valid (token confirmation is successful)
+        if email:
+            return render_template("reset_password.html", email=email,
+                                   token=token, message=message)
+        else:
+            # If the token is invalid, render the error page
+            return render_template('error.html')
+    # If the request method is POST (when the user submits the form)
+    if request.method == "POST":
+        # Get the email from the session
+        email = session.get('reset_email')
+        # Get the password and confirmation password from the form input
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirmpassword")
+
+        # Check if the passwords match
+        if password != confirm_password:
+            message = "Passwords do not match."
+            # Re-render the reset password page with an error message
+            return render_template("reset_password.html", email=email,
+                                   token=token, message=message)
+        # Hash the new password
+        hashed_password = bcrypt.generate_password_hash(password, 10)
+        # Update the user's password in the database using their email
+        update_db('UPDATE users SET Password = ? WHERE Email = ?',
+                  (hashed_password, email))
+        # Set a success message
+        message = f"Password successfully updated for {email}."
+        return render_template("reset_password.html", message=message,
+                               success=True)
+    # If the request method is neither GET nor POST, render the error page
+    return render_template("error.html")
 
 
 @app.route('/delete_account', methods=['POST'])
@@ -543,52 +584,71 @@ def delete_account():
 def add_database():
     # Check if user is logged in
     result = ensure_logged_in_or_error()
-    authors = query_db("SELECT * FROM Author", (),)
-    genres = query_db("SELECT * FROM Genre", (),)
     if result:
         return result
-    message1 = ''
-    message2 = ''
-    message3 = ''
+    # Retrieve authors and genres to display in the form
+    authors = query_db("SELECT * FROM Author", (),)
+    genres = query_db("SELECT * FROM Genre", (),)
+    # Dictionary to hold messages for each form section (author, book, genre)
+    message = {'author': '', 'book': '', 'genre': ''}
     # Handle author submission
     if 'aname' in request.form and 'a_description' in request.form:
         aname = request.form.get('aname')
         a_description = request.form.get('a_description')
+        # Handle image upload
         if 'a_image' not in request.files:
-            message1 += 'No file part'
+            # Check if the file part exists
+            message['author'] = 'No file selected for author image.'
+        # Get the uploaded file
         file = request.files['a_image']
         if file.filename == '':
-            message1 += 'No selected file'
+            # Check if a file was selected
+            message['author'] += 'No selected file'
+        # Check if the uploaded file is valid and save it
         if file and allowed_file(file.filename):
             image_filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['AUTHOR_IMAGE_FOLDER'],
                                    image_filename))
+        # Check if all required fields are filled before inserting to database
         if aname and a_description and image_filename:
             update_db('INSERT INTO Author (name, description, image) \
                            VALUES (?, ?, ?)', (aname, a_description,
                                                os.path.join(app.config
-                                                            ['BOOK_FOLDER'],
+                                                            ['AUTHOR_FOLDER'],
                                                             image_filename)))
-            message1 += ' Author added successfully!'
-
-        # Handle book submission
+            # Use relative path
+            message['author'] += 'Author added successfully!'
+        else:
+            message['author'] += 'Author submission failed. '
+    # Handle book submission
     elif 'bname' in request.form and 'blurb' in request.form:
         bname = request.form.get('bname')
         blurb = request.form.get('blurb')
         author_ids = request.form.getlist('authors')
         genre_ids = request.form.getlist('genres')
+        # Handle image upload for the book
         if 'b_image' not in request.files:
-            message2 += 'No file part'
+            # Check if a file was selected
+            message['book'] += 'No file part'
+        # Get the uploaded file
         file = request.files['b_image']
         if file.filename == '':
-            message2 += 'No selected file'
+            message['book'] += 'No selected file'
+        # Check if the uploaded file is valid and save it
         if file and allowed_file(file.filename):
+            # Secure the filename
             image_filename = secure_filename(file.filename)
+            # save
             file.save(os.path.join(app.config['BOOK_IMAGE_FOLDER'],
                                    image_filename))
+        # Check if all required fields are filled before inserting to database
         if bname and blurb and image_filename:
             # Get the ID of the newly inserted book
-            book_id = update_db_with_last_id("INSERT INTO Books (name, blurb, image) VALUES (?, ?, ?)", (bname, blurb, os.path.join(app.config['BOOK_FOLDER'], image_filename)))
+            book_id = update_last_id("INSERT INTO Books (name, blurb, image)\
+                                        VALUES (?, ?, ?)",
+                                     (bname, blurb,
+                                      os.path.join(app.config['BOOK_FOLDER'],
+                                                   image_filename)))
             # Ensure author_ids and genre_ids are integers
             author_ids = [int(a_id) for a_id in author_ids]
             genre_ids = [int(g_id) for g_id in genre_ids]
@@ -602,133 +662,64 @@ def add_database():
             for genre_id in (genre_ids):
                 update_db('INSERT INTO book_genre (book, genre) VALUES (?, ?)',
                           (book_id, genre_id))
-            message2 += ' Book added successfully!'
+            message['book'] += ' Book added successfully!'
 
         # Handle genre submission
     elif 'gname' in request.form and 'g_description' in request.form:
         gname = request.form.get('gname')
         g_description = request.form.get('g_description')
+        # Check if all required fields are filled before inserting to database
         if gname and g_description:
             update_db('INSERT INTO Genre (name, description) \
                            VALUES (?, ?)', (gname, g_description))
-            message3 += ' Genre added successfully!'
-
+            message['genre'] += ' Genre added successfully!'
+    # Render the template with messages, retrieved authors and genres
     return render_template('add_db.html',
-                           message1=message1,
-                           message2=message2,
-                           message3=message3, authors=authors, genres=genres)
+                           message=message, authors=authors, genres=genres)
 
 
 @app.route('/delete_database', methods=['GET', 'POST'])
 def delete_database():
+    # Check if user is logged in; if not, handle the error accordingly
     result = ensure_logged_in_or_error()
     if result:
         return result
+    # Dictionary to hold messages for deletion results for author, book, genre
     messages = {'a_id': '', 'b_id': '', 'g_id': ''}
+    # Handle form submission for deletion when the request method is POST
     if request.method == 'POST':
         a_id = request.form.get('a_id')
         b_id = request.form.get('b_id')
         g_id = request.form.get('g_id')
         # Author ID check
         if a_id:
+            # Check if the author ID exists in the database
             if query_db('SELECT id FROM Author WHERE id=?', (a_id,), one=True):
+                # Delete the author from the database if found
                 update_db('DELETE FROM Author WHERE id=?', (a_id,))
                 messages['a_id'] = 'Author deleted successfully!'
             else:
                 messages['a_id'] = 'Author ID not found in the database!'
         # Book ID check
         if b_id:
+            # Check if the book ID exists in the database
             if query_db('SELECT id FROM Books WHERE id=?', (b_id,), one=True):
+                # Delete the book from the database if found
                 update_db('DELETE FROM Books WHERE id=?', (b_id,))
                 messages['b_id'] = 'Book deleted successfully!'
             else:
                 messages['b_id'] = 'Book ID not found in the database!'
         # Genre ID check
         if g_id:
+            # Check if the genre ID exists in the database
             if query_db('SELECT id FROM Genre WHERE id=?', (g_id,), one=True):
+                # Delete the genre from the database if found
                 update_db('DELETE FROM Genre WHERE id=?', (g_id,))
                 messages['g_id'] = 'Genre deleted successfully!'
             else:
                 messages['g_id'] = 'Genre ID not found in the database!'
+    # Render the delete_db.html template with messages regarding deletion
     return render_template("delete_db.html", messages=messages)
-
-
-@app.route('/change_database',  methods=['GET', 'POST'])
-def change_database():
-    # Check if user is logged in
-    result = ensure_logged_in_or_error()
-    if result:
-        return result
-    message1 = ''
-    message2 = ''
-    message3 = ''
-
-    # Handle author update
-    if 'a_id' in request.form and 'aname' in request.form and 'a_description' in request.form:
-        a_id = request.form.get('a_id')
-        aname = request.form.get('aname')
-        a_description = request.form.get('a_description')
-
-        # Optional image update
-        if 'a_image' in request.files and request.files['a_image'].filename != '':
-            file = request.files['a_image']
-            if allowed_file(file.filename):
-                image_filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'author',
-                                       image_filename))
-                image_path = os.path.join(app.config['AUTHOR_FOLDER'],
-                                          image_filename)
-                # Update with new image
-                update_db('UPDATE Author SET name=?, description=?, image=? WHERE id=?',
-                               (aname, a_description, image_path, a_id))
-                message1 = 'Author updated successfully!'
-            else:
-                message1 = 'Invalid file type for Author image!'
-        else:
-            # Update without image
-            update_db('UPDATE Author SET name=?, description=? WHERE id=?',
-                           (aname, a_description, a_id))
-            message1 = 'Author updated successfully without new image!'
-
-    # Handle book update
-    elif 'b_id' in request.form and 'bname' in request.form and 'blurb' in request.form:
-        b_id = request.form.get('b_id')
-        bname = request.form.get('bname')
-        blurb = request.form.get('blurb')
-
-        # Optional image update
-        if 'b_image' in request.files and request.files['b_image'].filename != '':
-            file = request.files['b_image']
-            if allowed_file(file.filename):
-                image_filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'book',
-                                       image_filename))
-                image_path = os.path.join(app.config['BOOK_FOLDER'],
-                                          image_filename)
-                # Update with new image
-                update_db('UPDATE Books SET name=?, blurb=?, image=? WHERE id=?', (bname, blurb, image_path, b_id))
-                message2 = 'Book updated successfully!'
-            else:
-                message2 = 'Invalid file type for Book image!'
-        else:
-            # Update without image
-            update_db('UPDATE Books SET name=?, blurb=? WHERE id=?',
-                           (bname, blurb, b_id))
-            message2 = 'Book updated successfully without new image!'
-
-    # Handle genre update
-    elif 'g_id' in request.form and 'gname' in request.form and 'g_description' in request.form:
-        g_id = request.form.get('g_id')
-        gname = request.form.get('gname')
-        g_description = request.form.get('g_description')
-        update_db('UPDATE Genre SET name=?, description=? WHERE id=?',
-                  (gname, g_description, g_id))
-        message3 = 'Genre updated successfully!'
-
-    return render_template('change_db.html',
-                           message1=message1,
-                           message2=message2,
-                           message3=message3)
 
 
 # Run the application if this script is executed directly

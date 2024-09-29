@@ -11,15 +11,16 @@
         <input type="text2" id="aname" name="aname" placeholder="Name.." required maxlength="25">
 
         <label for="a_description">Description</label>
-        <input type="text2" id="a_description" name="a_description" placeholder="Description.." required maxlength="250">
+        <textarea id="a_description" name="a_description" placeholder="Description.." required maxlength="250">
+        </textarea>
 
         <label for="a_image">Upload Author Image:</label>
         <input type="file" id="a_image" name="a_image" required>
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message1 %}  <!-- Check if there is a message to display -->
-            <p class="message">{{ message1 }}</p> <!-- Display the message -->
+        {% if message.author %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message.author }}</p> <!-- Display the message -->
         {% endif %}
         
     </form>
@@ -33,9 +34,9 @@
         <input type="text2" id="bname" name="bname" placeholder="Name.." required maxlength="25">
 
         <label for="blurb">Blurb</label>
-        <input type="text2" id="blurb" name="blurb" placeholder="Blurb.." required maxlength="250">
-
-        <label for="authors">Select Author(s)</label>
+        <textarea id="blurb" name="blurb" placeholder="Blurb.." required maxlength="250">
+        </textarea>
+        <label for="authors">Select Author</label>
             <select id="authors" name="authors">
                 {% for author in authors %}
                     <option value="{{ author[0] }}">{{ author[1]}}</option>
@@ -52,8 +53,8 @@
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message2 %}  <!-- Check if there is a message to display -->
-            <p class="message">{{ message2 }}</p> <!-- Display the message -->
+        {% if message.book %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message.book }}</p> <!-- Display the message -->
         {% endif %}
 
         <label for="b_image">Upload Book Image:</label>
@@ -74,8 +75,8 @@
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message3 %}  <!-- Check if there is a message to display -->
-            <p class="message">{{ message3 }}</p> <!-- Display the message -->
+        {% if message.genre %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message.genre }}</p> <!-- Display the message -->
         {% endif %}
     </form>
 </div>

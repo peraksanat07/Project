@@ -440,6 +440,23 @@ input[type=submit]:hover {
   color: white;
 }
 
+.delete {
+  /* overrides the css impacting this button */
+  background-color: rgb(177, 54, 54) !important;   
+  color: white !important;            
+  border: none !important;
+  padding: 10px 15px !important;   
+  cursor: pointer !important;
+  /* text bold */
+  font-weight: bold !important;
+}
+
+.delete:hover {
+  background-color: rgb(121, 38, 38) !important; 
+  /* Change background color on hover */
+}
+
+
 /* Submit button for forms with specific styling */
 input[type=submit] {
   background-color: #e29578;
