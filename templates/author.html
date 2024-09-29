@@ -28,7 +28,7 @@
     <p style="font-size:120%;">
       Click on the photos to see individual profiles and blurbs. Admins can add or remove items as they please.
     </p>
-  </div>
+  </div> <!-- class="content" -->
 
   <!-- Loop through authors -->
   {% for author in authors %}
@@ -39,10 +39,10 @@
             <img src="{{ author[2] }}" alt="Unavailable" class="image">
             <div class="text">
               {{ author[1] }}
-            </div>
+            </div> <!-- class="text" -->
           </a>
-        </div>
-      </div>
-    </div>
+        </div> <!-- class="middle" -->
+      </div> <!-- class="container" -->
+    </div> <!-- class="column" -->
   {% endfor %}
 {% endblock %}

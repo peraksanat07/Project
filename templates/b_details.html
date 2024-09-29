@@ -4,9 +4,10 @@
 
 
     <!-- Book title -->
-    <div class="text1">
+    <div class="highlight">
     <h2>About {{ book[1] }}</h2>
-    </div>
+    </div> <!-- class="highlight" -->
+
     <h3> Blurb </h3>
     <!-- Book description -->
     <p>{{ book[2] }}</p>
@@ -27,14 +28,15 @@
         <a href="/author/{{ author[0] }}">{{ author[1] }}</a>{% if not loop.last %}, {% endif %}
       {% endfor %}
     </p>
-  </div>
 
     <!-- Display book image if available -->
     {% if book[3] %}
       <div class="portfolio">
         <img src="{{ book[3] }}" alt="Books Image" class="portfolio"/>
-          <div class="text2"> Book Cover of {{ book[1] }}</div>
-      </div>
+          <div class="text2"> 
+            Book Cover of {{ book[1] }}
+          </div> <!-- class="text2" -->
+      </div> <!-- class="portfolio" -->
     {% endif %}
 {% endblock %}
 

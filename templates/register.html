@@ -17,31 +17,31 @@
             <div class="field input">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" autocomplete="off" required value="{{ request.form.username }}" maxlength="25">
-            </div>
+            </div> <!-- class="field input" -->
 
             <!-- Email input field -->
             <div class="field input">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" autocomplete="off" required value="{{ request.form.email }}" maxlength="70">
-            </div>
+            </div> <!-- class="field input" -->
 
             <!-- Age input field -->
             <div class="field input">
                 <label for="age">Age (Must be 16 or over)</label>
                 <input type="number" name="age" id="age" autocomplete="off" required value="{{ request.form.age }}">
-            </div>
+            </div> <!-- class="field input" -->
 
             <!-- Password input field -->
             <div class="field input">
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" autocomplete="off" required minlength="8" maxlength="10">
-            </div>
-
+            </div> <!-- class="field input" -->
+ 
             <!-- Confirm Password input field -->
             <div class="field input">
                 <label for="confirmpassword">Confirm Password *</label>
                 <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required minlength="8" maxlength="10">
-            </div>
+            </div> <!-- class="field input" -->
 
             <!-- Message display -->
             {% if message %}
@@ -51,14 +51,14 @@
             <!-- Submit button -->
             <div class="field">
                 <input type="submit" class="btn" name="submit" value="Register" required>
-            </div>
+            </div> <!-- class="field" -->
 
             <!-- Links section (sign in link) -->
             <div class="links">
                 <p>Already a member? <a href="log-in">Sign In</a></p>
-            </div>
+            </div> <!-- class="links" -->
         </form>
-    </div>
-</div>
+    </div> <!-- class="box form-box" -->
+</div> <!-- class="container" -->
 
 {% endblock %}

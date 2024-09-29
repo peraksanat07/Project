@@ -1,7 +1,8 @@
 {% extends "u_layout.html" %}
 
 {% block content %}
-    <div class="text1">
+    <div class="highlight">
+      <!-- Display the author's name as a heading (author[1] holds the name) -->
     <h2>About {{ author[1] }}</h2>
     </div>
     <!-- Author Description -->
@@ -9,6 +10,7 @@
 
     <!-- Associated Books -->
     <p class="decor">Books:
+       <!-- Loop through each book in the 'books' list -->
       {% for book in books %}
         <a href="/books/{{ book[0] }}">{{ book[1] }}</a>{% if not loop.last %}, {% endif %}
       {% endfor %}

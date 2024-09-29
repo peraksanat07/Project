@@ -1,6 +1,7 @@
 {% extends "a_layout.html" %}
 {% block content %}
 <h1> Please refer to the database tables on the admin page. </h1>
+
 <!-- Delete Author -->
 <h2> Delete Author </h2>
 <div class="contactlist">
@@ -12,7 +13,7 @@
             <p class="message">{{ messages.a_id }}</p>
         {% endif %}
     </form>
-</div>
+</div> <!-- class="contactlist" -->
 
 <!-- Delete Book -->
 <h2> Delete Book </h2>
@@ -25,7 +26,7 @@
             <p class="message">{{ messages.b_id }}</p>
         {% endif %}
     </form>
-</div>
+</div> <!-- class="contactlist" -->
 
 <!-- Delete Genre -->
 <h2> Delete Genre </h2>
@@ -38,5 +39,5 @@
             <p class="message">{{ messages.g_id }}</p>
         {% endif %}
     </form>
-</div>
+</div> <!-- class="contactlist" -->
 {% endblock %}

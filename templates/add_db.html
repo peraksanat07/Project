@@ -2,6 +2,7 @@
 {% block content %}
 
 <h1> Please refer to the database tables on the admin page. </h1>
+<!-- Subheading for adding authors -->
 <h2> Add Author </h2>
 <!-- Author Form -->
 <div class="contactlist">
@@ -17,15 +18,14 @@
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message1 %}
-            <p class="message">{{ message1 }}</p>
+        {% if message1 %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message1 }}</p> <!-- Display the message -->
         {% endif %}
         
     </form>
 </div>
 
 <h2> Add Book </h2>
-
 <!-- Book Form -->
 <div class="contactlist">
     <form action="/add_database" method="post" enctype="multipart/form-data">
@@ -52,8 +52,8 @@
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message2 %}
-            <p class="message">{{ message2 }}</p>
+        {% if message2 %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message2 }}</p> <!-- Display the message -->
         {% endif %}
 
         <label for="b_image">Upload Book Image:</label>
@@ -63,7 +63,6 @@
 </div>
 
 <h2> Add Genre </h2>
-
 <!-- Genre Form -->
 <div class="contactlist">
     <form action="/add_database" method="post">
@@ -75,8 +74,8 @@
 
         <button id="button1" type="submit">Submit</button>
 
-        {% if message3 %}
-            <p class="message">{{ message3 }}</p>
+        {% if message3 %}  <!-- Check if there is a message to display -->
+            <p class="message">{{ message3 }}</p> <!-- Display the message -->
         {% endif %}
     </form>
 </div>

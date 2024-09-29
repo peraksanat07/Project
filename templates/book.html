@@ -18,7 +18,7 @@
             Click on the photos to see their individual profiles and blurbs. Admins can add or remove items as they please.
         </p>
 
-    </div>
+    </div> <!-- class="content" -->
 
     {% for book in books %}
     <!-- Book Listing -->
@@ -29,10 +29,10 @@
                     <img src="{{ book[2] }}" alt="Unavailable" class="image">
                     <div class="text">
                         {{ book[1] }}
-                    </div>
+                    </div> <!-- class="text" -->
                 </a>
-            </div>
-        </div>
-    </div>
+            </div> <!-- class="middle" -->
+        </div> <!-- class="container" -->
+    </div> <!-- class="column" -->
     {% endfor %}
 {% endblock %}

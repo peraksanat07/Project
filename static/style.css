@@ -1,4 +1,4 @@
-
+/* Header styling with padding, center alignment, and background color */
 .header {
   padding: 60px;
   text-align: center;
@@ -6,12 +6,14 @@
   color: #006d77;
   font-size: 30px;
 }
+
+/* Top navigation bar with hidden overflow and background color */
 .topnav {
   overflow: hidden;
   background-color: #e29578;
 }
 
-
+/* Links inside the top navigation bar with default styling */
 .topnav a {
   float: left;
   display: block;
@@ -22,20 +24,24 @@
   font-size: 17px;
 }
 
+/* Hover effect for links inside the top navigation bar */
 .topnav a:hover {
   background-color: #bb745a;
   color: rgb(183, 157, 157);
 }
 
+/* Active link styling in the navigation bar */
 .topnav a.active {
   background-color: #2196F3;
   color: white;
 }
 
+/* Right-aligned search container within the top navigation */
 .topnav .search-container {
   float: right;
 }
 
+/* Input field styling for search in the top navigation bar */
 .topnav input[type=text] {
   padding: 6px;
   margin-top: 8px;
@@ -43,6 +49,7 @@
   border: none;
 }
 
+/* Styling for the search button in the top navigation */
 .topnav .search-container button {
   float: right;
   padding: 6px 10px;
@@ -54,26 +61,12 @@
   cursor: pointer;
 }
 
+/* Hover effect for the search button */
 .topnav .search-container button:hover {
   background: #ccc;
 }
 
-@media screen and (max-width: 600px) {
-  .topnav .search-container {
-    float: none;
-  }
-  .topnav a, .topnav input[type=text], .topnav .search-container button {
-    float: none;
-    display: block;
-    text-align: left;
-    width: 100%;
-    margin: 0;
-    padding: 14px;
-  }
-  .topnav input[type=text] {
-    border: 1px solid #ccc;  
-  }
-}
+
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
   .topnav a, .topnav input[type=text] {
@@ -89,7 +82,7 @@
   }
 }
 
-
+/* Body styling with a font-family, background color, and flexible layout */
 body {
     font-family: "Verdana"; 
     color : #a3c5be ; 
@@ -101,17 +94,26 @@ body {
     
 }
 
+/* for the head title of the website 'LIBRARY' */
+h1 { 
+  text-align: center;}
 
-h4 {    color : #EDf6f9 ; 
+/* Heading styles */
+h2 {
+  color: #708298; text-align: center
 }
 
+/* Heading styles */
 h3 { 
   color : #a3c5be ; 
   text-align: center;
 }
 
-h2 {color: #708298; text-align: center}
+/* Heading styles */
+h4 {    color : #EDf6f9 ; 
+}
 
+/* Paragraph text styling */
 p{ 
     color: #a27167 ;
     text-decoration: none;
@@ -119,6 +121,7 @@ p{
 
 }
 
+/* styling for specific class 'decor' in the association titles in pages*/
 .decor{ 
   color: #0c6068 ;
   font-size: large;
@@ -130,6 +133,7 @@ p{
 
 }
 
+/* styling for specific class 'decor2' in the author association titles in Book pages*/
 .decor2{ 
   color: #ce5f53 ;
   font-size: large;
@@ -141,6 +145,7 @@ p{
 
 }
 
+/* Portfolio grid styling */
 .portfolio {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -149,11 +154,13 @@ p{
   margin: 0 auto;
 }
 
+/* Image inside the portfolio with full width */
 .portfolio-image {
   width: 100%;
   height: auto;
 }
 
+/* Text styling for class 'text2' with background color for forms*/
 .text2 {
   background-color: #09808b;
   text-align: center;
@@ -163,37 +170,36 @@ p{
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Link hover effect inside paragraphs used for association links*/
 p a{ 
   color: #a1c7bf ;
   text-decoration: none;
 
 }
 
+/* Link hover effect inside paragraphs used for association links*/
 p a:hover{ 
   color: #73a199 ;
   text-decoration: none;
 
 }
 
+/* Link hover effect used for Genre page and search links */
 h2 a{ 
   color: #6cad9f ;
   text-decoration: none;
 
 }
 
+/* Link hover effect used for Genre page and search links */
 h2 a:hover{ 
   color: #54857d ;
   text-decoration: none;
 
 }
 
-h3 a{ 
-  color: #a3c5be ;
-  text-decoration: none;
-
-}
-
-
+/* Breaker div with padding and background color */
 .breaker{ 
   display: flex;
   padding: 10px 600px;
@@ -201,10 +207,12 @@ h3 a{
   max-width: 100%;
 } 
 
+/* Container styling for an image with hover effects */
  .container {
   position: relative;
 } 
 
+/* Styling for the image inside the container */
 .image {
   opacity: 1;
   display: block;
@@ -216,6 +224,7 @@ h3 a{
 
 }
 
+/* Positioning for content in the middle of the container */
 .middle {
   transition: .5s ease;
   position: absolute;
@@ -225,23 +234,24 @@ h3 a{
   -ms-transform: translate(-50%, -50%)
 } 
 
+/* Hover effect for the image inside the container */
 .container:hover .image {
   opacity: 0.3;
 }
 
+/* Hover effect for the content in the middle */
 .container:hover .middle {
   opacity: 1;
 }
 
+/* More styling for text and hover effects for catalogues (Authors and Books) */
 .text {
   background-color: #09808b;
   text-align: center;
   color: white;
   font-size: 16px;
   padding: 15px 32px;
-  text-decoration: none;
-
-  
+  text-decoration: none;  
 }
 
 .text:hover {
@@ -251,27 +261,20 @@ h3 a{
   color: white;
   font-size: 16px;
   padding: 15px 32px;
-  text-decoration: none;
-
-  
+  text-decoration: none; 
 }
 
-.text1 {
+/* aesthetic decorations for h2 titles in pages using background color*/
+.highlight {
   background-color: #a9b7c8;
   text-align: center;
   color: white;
   font-size: 16px;
   padding: 15px 32px;
   text-decoration: none;
-
-  
 }
 
-
-
-h1 { text-align: center;}
-
-
+/* Footer styling */
 footer {
     margin-top: auto;
     left: 0;
@@ -281,18 +284,17 @@ footer {
     padding: 10px;
     text-align: center;
     border-bottom-right-radius: 0px;
-   border-bottom-left-radius: 0px;
+    border-bottom-left-radius: 0px;
     background-color: #006d77;
-              }
-  
-.line  {background-color: #a29b89;}
+}
 
-
+/* for homepage box decoration welcome image*/
 div.background {
   background: url(/static/images/lb.jpeg) repeat;
   border: 2px solid black;
 }
 
+/* for homepage box decoration welcome border*/
 div.transbox {
   margin: 30px;
   background-color: #f9f0e5;
@@ -300,6 +302,7 @@ div.transbox {
   opacity: 0.8;
 }
 
+/* for homepage box decoration welcome text*/
 div.transbox p {
   margin: 5%;
   font-weight: bold;
@@ -350,11 +353,11 @@ div.transbox p {
   }
 }
 
-/* contact form */
-
+/* General styling for the admin panel and forms */
 body {font-family: "gill sans", sans-serif; color:#cf7757}
-* {box-sizing: border-box;}
+* {box-sizing: border-box;} /* Apply universal box-sizing to elements */
 
+/* Input fields and textarea styling */
 input[type=text2], select, textarea {
   width: 100%;
   padding: 12px;
@@ -366,6 +369,7 @@ input[type=text2], select, textarea {
   resize: vertical;
 }
 
+/* Submit button default and hover state */
 input[type=submit] {
   background-color: #accbb8;
   color: white;
@@ -379,6 +383,7 @@ input[type=submit]:hover {
   background-color: #94b5a1;
 }
 
+/* Contact list container */
 .contactlist {
   font-family: "gill sans", sans-serif; 
   border-radius: 5px;
@@ -387,6 +392,7 @@ input[type=submit]:hover {
   
 }
 
+/* Button default styling */
 #button {
   border: none;
   color: white;
@@ -400,6 +406,7 @@ input[type=submit]:hover {
   cursor: pointer;
 }
 
+/* Button 1 hover state */
 #button {
   background-color: #accbb8; 
   color: #ffffff; 
@@ -409,7 +416,6 @@ input[type=submit]:hover {
   background-color: #80a38d;
   color: white;
 }
-
 
 #button1 {
   border: none;
@@ -434,6 +440,7 @@ input[type=submit]:hover {
   color: white;
 }
 
+/* Submit button for forms with specific styling */
 input[type=submit] {
   background-color: #e29578;
   color: white;
@@ -448,25 +455,12 @@ input[type=submit]:hover {
   background-color: #cf7a5c;
 }
 
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(93, 165, 223); /* Fallback color */
-  background-color: rgba(99, 119, 146, 0.4); /* Black w/ opacity */
-  padding-top: 60px;
-}
-
+/* Error page styling */
 .error {
   text-align: center;
 }
 
+/* image for error */
 .error img {
   width: 150px;
   margin-bottom: 20px;
@@ -484,6 +478,7 @@ input[type=submit]:hover {
   margin-top: 20px;
 }
 
+/* redirecting back to homepage */
 .error a {
   display: inline-block;
   padding: 10px 20px;
@@ -496,13 +491,14 @@ input[type=submit]:hover {
   animation: bounce 1s ease-in-out infinite;
 }
 
+/* redirecting back to homepage hover*/
 .error a:hover {
   background-color: #d47d65;
   color: #fff;
 }
 
 
-/* login 2 */
+/* Login, registration and forgot password form styling */
 .container{
   display: flex;
   align-items: center;
@@ -520,11 +516,13 @@ input[type=submit]:hover {
               0 32px 64px -48px rgba(0,0,0,0.5);
 }
 
+/* styling for input boxes */
 .form-box{
   width: 450px;
   margin: 0px 10px;
 }
 
+/* heading */
 .form-box header{
   font-size: 25px;
   font-weight: 600;
@@ -533,12 +531,14 @@ input[type=submit]:hover {
   margin-bottom: 10px;
 }
 
+/* input field styling */
 .form-box form .field{
   display: flex;
   margin-bottom: 10px;
   flex-direction: column;
 }
 
+/* input field styling */
 .form-box form .input{
   height: 40px;
   width: 100%;
@@ -549,7 +549,7 @@ input[type=submit]:hover {
   outline: none;
 }
 
-/* check this is working */
+/* Button styles for forms (login, register etc) */
 .btn{
   height: 35px;
   border: 0;
@@ -571,10 +571,12 @@ input[type=submit]:hover {
   width: 100%;
 }
 
+/* Home page links */
 .links{
   margin-bottom: 15px;
 }
 
+/* message for informing user */
 .message{
   color: #cf2e1c
 }
@@ -584,11 +586,13 @@ input[type=submit]:hover {
   padding: 0 10px;
 }
 
+/* Bottom container */
 .bottom {
   width: 100%;
   margin-top: 20px;
 }
 
+/* Responsive design for screens smaller than 840px */
 @media only screen and (max-width: 840px) {
   .main-box .top{
     display: flex;
@@ -603,6 +607,7 @@ input[type=submit]:hover {
   }
 } 
 
+/* Tabbed navigation (radio buttons for different content in the admin database tables) */
 /* Hide actual radio buttons */
 .tab-radio {
     display: none;
@@ -644,13 +649,14 @@ input[type=submit]:hover {
     display: block;
 }
 
-/* Style for tables */
+/* Style for tables for admin database*/
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
 }
 
+/* Header styling for table columns */
 thead th {
   background-color: #e27f78;
   color: #ffe5dc;
@@ -659,19 +665,23 @@ thead th {
   border-bottom: 2px solid #915944;
 }
 
+/* Body cells styling */
 tbody td {
   padding: 10px;
   border-bottom: 1px solid #915944;
 }
 
+/* Highlight rows on hover */
 tbody tr:hover {
   background-color: #f5f5f5;
 }
 
+/* Apply border styling to the table, header, and data cells */
 table, th, td {
   border: 1px solid #915944;
 }
 
+/* Styling for the main container box */
 .main-box {
   padding: 20px;
   margin-bottom: 20px;

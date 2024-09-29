@@ -12,30 +12,30 @@
                 <div class="field input">
                     <label for="username">Username</label>
                     <input type="text" name="username" id="username" autocomplete="off" disabled value="{{ name }}">
-                </div>
+                </div> <!-- class="field input" -->
                 
                 <!-- Email field -->
                 <div class="field input">
                     <label for="email">Email</label>
                     <input type="text" name="email" id="email" autocomplete="off" required value="{{ email }}">
-                </div>
+                </div> <!-- class="field input" -->
                 
                 <!-- Age field -->
                 <div class="field input">
                     <label for="age">Age</label>
                     <input type="text" name="age" id="age" autocomplete="off" required value="{{ age }}" maxlength="3">
-                </div>
+                </div> <!-- class="field input" -->
 
                 <!-- Age field -->
                 <div class="field input">
                     <label for="password">password</label>
                     <input type="password" name="password" id="password" autocomplete="off" required>
-                </div>
+                </div> <!-- class="field input" -->
 
                 <div class="field input">
                     <label for="confirmpassword"> Confirm Password</label>
                     <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required>
-                </div>
+                </div> <!-- class="field input" -->
                 
                 <!-- Message display -->
                 {% if message %}
@@ -45,14 +45,14 @@
                 <!-- Submit button -->
                 <div class="field">
                     <input type="submit" class="btn" name="submit" value="Update">
-                </div>
+                </div> <!-- class="field" -->
+
             </form>
             <!-- Delete Account form -->
             <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
-                <div>
                     <input type="submit" class="delete" name="delete" value="Delete Account">
-                </div>
             </form>
-        </div>
-        </div>
+
+        </div> <!-- class="box form-box" -->
+    </div> <!-- class="contsinrt" -->
     {% endblock %}

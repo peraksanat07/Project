@@ -3,15 +3,15 @@
 
 
 <main>
-    <div class="main-box top">
+    <div class="main-box top"> <!-- Container for welcome message -->
         <h2>Hello <b>{{ name }}</b>, Welcome to the Library Admin Page</h2>
     </div>
     
-    <div class="main-box">
+    <div class="main-box"> <!-- Container for email  -->
         <p>Your email is <b>{{ email }}</b>.</p>
     </div>
     
-    <div class="main-box">
+    <div class="main-box"> <!-- Container for age -->
         <p>And you are <b>{{ age }} years old</b>.</p>
     </div>
     
@@ -31,10 +31,13 @@
     <label for="tab-authors" class="tab-button">Authors</label>
 </div>
 
-<!-- Tab Content -->
+<!-- Tab Content for Books -->
 <div class="tab-content" id="books">
+     <!-- Subheading for Books table -->
     <h2>Books</h2>
+    <!-- Check if there are any books to display -->
     {% if books %}
+    <!-- Start of Books table -->
     <table>
         <thead>
             <tr>
@@ -44,6 +47,7 @@
             </tr>
         </thead>
         <tbody>
+             <!-- Loop through each book entry -->
             {% for row in books %}
             <tr>
                 <td>{{ row[0] }}</td>
@@ -53,14 +57,19 @@
             {% endfor %}
         </tbody>
     </table>
+    <!-- Message if no books are available -->
     {% else %}
     <p>No books found.</p>
     {% endif %}
 </div>
 
+<!-- Tab Content for Genres -->
 <div class="tab-content" id="genres">
+    <!-- Subheading for Genres table -->
     <h2>Genres</h2>
+    <!-- Check if there are any genres to display -->
     {% if genres %}
+    <!-- Start of Genres table -->
     <table>
         <thead>
             <tr>
@@ -70,6 +79,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Loop through each genre entry -->
             {% for row in genres %}
             <tr>
                 <td>{{ row[0] }}</td>
@@ -80,13 +90,18 @@
         </tbody>
     </table>
     {% else %}
+    <!-- Message if no genres are available -->
     <p>No genres found.</p>
     {% endif %}
 </div>
 
+<!-- Tab Content for Authors -->
 <div class="tab-content" id="authors">
+    <!-- Subheading for Authors table -->
     <h2>Authors</h2>
+    <!-- Check if there are any authors to display -->
     {% if authors %}
+    <!-- Start of Authors table -->
     <table>
         <thead>
             <tr>
@@ -96,6 +111,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Loop through each author entry -->
             {% for row in authors %}
             <tr>
                 <td>{{ row[0] }}</td>
@@ -106,6 +122,7 @@
         </tbody>
     </table>
     {% else %}
+    <!-- Message if no authors are available -->
     <p>No authors found.</p>
     {% endif %}
 </div>

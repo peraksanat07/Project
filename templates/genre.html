@@ -18,7 +18,7 @@
         <p style="font-size: 120%;">
             Click on the photos to see their individual profiles and blurbs. Admins can add or remove items as they please.
         </p>
-    </div>
+    </div> <!-- class="content" -->
 
     <!-- loop -->
     {% for genre in genres %}
@@ -27,9 +27,8 @@
             <h2>
                 <a href="/genre/{{ genre[0] }}">
                     {{ genre[1] }}
-                    
                 </a> 
             </h2>
-        </div>
+        </div> <!-- class="column" -->
     {% endfor %}
 {% endblock %}
