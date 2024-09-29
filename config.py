@@ -1,4 +1,7 @@
 from datetime import timedelta
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
@@ -13,7 +16,16 @@ class Config(object):
     MYSQL_DB = 'user-system'
 
 # File Upload Configuration
-    UPLOAD_FOLDER = '/Users/peraksana/Downloads/Project/static/images/'
+# Existing config values
+    UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static', 'images')
+
+    # New paths for author and book images
+    AUTHOR_IMAGE_FOLDER = os.path.join(UPLOAD_FOLDER, 'author')
+    BOOK_IMAGE_FOLDER = os.path.join(UPLOAD_FOLDER, 'book')
+
+    # Ensure directories exist
+    os.makedirs(AUTHOR_IMAGE_FOLDER, exist_ok=True)
+    os.makedirs(BOOK_IMAGE_FOLDER, exist_ok=True)
     # Folder where images will be stored
     AUTHOR_FOLDER = '/static/images/author'
     BOOK_FOLDER = '/static/images/book'

@@ -1,15 +1,15 @@
 {% extends "a_layout.html" %}
 {% block content %}
-
+<h1> Please refer to the database tables on the admin page. </h1>
 <!-- Delete Author -->
 <h2> Delete Author </h2>
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="a_id">ID</label>
-        <input type="number" id="a_id" name="a_id" placeholder="ID..." required maxlength="3">
+        <input type="text" id="a_id" name="a_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
-        {% if message1 %}
-            <p class="message">{{ message1 }}</p>
+        {% if messages.a_id %}
+            <p class="message">{{ messages.a_id }}</p>
         {% endif %}
     </form>
 </div>
@@ -19,10 +19,10 @@
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="b_id">ID</label>
-        <input type="number" id="b_id" name="b_id" placeholder="ID..." required maxlength="3">
+        <input type="text" id="b_id" name="b_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
-        {% if message2 %}
-            <p class="message">{{ message2 }}</p>
+        {% if messages.b_id %}
+            <p class="message">{{ messages.b_id }}</p>
         {% endif %}
     </form>
 </div>
@@ -32,10 +32,10 @@
 <div class="contactlist">
     <form action="/delete_database" method="POST">
         <label for="g_id">ID</label>
-        <input type="number" id="g_id" name="g_id" placeholder="ID..." required maxlength="3">
+        <input type="text" id="g_id" name="g_id" placeholder="ID..." required maxlength="3">
         <button id="button1" type="submit">Delete</button>
-        {% if message3 %}
-            <p class="message">{{ message3 }}</p>
+        {% if messages.g_id %}
+            <p class="message">{{ messages.g_id }}</p>
         {% endif %}
     </form>
 </div>

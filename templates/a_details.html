@@ -13,13 +13,14 @@
         <a href="/books/{{ book[0] }}">{{ book[1] }}</a>{% if not loop.last %}, {% endif %}
       {% endfor %}
     </p>
-  </div>
 
     <!-- Author Image -->
   {% if author[3] %}
     <div class="portfolio">
       <img src="{{ author[3] }}" alt="Books Image" class="portfolio"/>
-        <div class="text2"> Picture of {{ author[1] }}</div>
-    </div>
+        <div class="text2"> 
+          Picture of {{ author[1] }}
+        </div> <!-- class = text2 -->
+    </div>  <!-- portfolio -->
   {% endif %}
 {% endblock %}

@@ -1,12 +1,11 @@
 # Import necessary modules and classes from Flask and other libraries
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, \
+    url_for, g
 import os
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash
 from config import Config
 from flask_bcrypt import Bcrypt
 import sqlite3
-import re
 from itsdangerous import URLSafeTimedSerializer
 import smtplib
 from email.mime.text import MIMEText
@@ -90,7 +89,8 @@ def password():
         email = request.form.get("email")
         con = sqlite3.connect(app.config['DATABASE'])
         cursor = con.cursor()
-        user = cursor.execute('SELECT * FROM users WHERE Email = ?', (email,)).fetchone()
+        user = cursor.execute('SELECT * FROM users WHERE Email = ?',
+                              (email,)).fetchone()
 
         if user:
             token = generate_token(email)
@@ -113,7 +113,8 @@ def reset_password():
     if request.method == "GET":
         email = confirm_token(token)
         if email:
-            return render_template("reset_password.html", email=email, token=token, message=message)
+            return render_template("reset_password.html", email=email,
+                                   token=token, message=message)
         else:
             return render_template('error.html')
 # check if this part works because it isn't???
@@ -127,10 +128,11 @@ def reset_password():
             return redirect(url_for("reset_password", token=token))
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        update_db('UPDATE users SET Password = ? WHERE Email = ?', (hashed_password, email))
+        update_db('UPDATE users SET Password = ? WHERE Email = ?',
+                  (hashed_password, email))
         message = f"Password successfully updated for {email}."
         # return redirect(url_for('log_in'))
-    return render_template("error.html", message="Something went wrong. Please try again.")
+    return render_template("error.html")
 
 
 def ensure_logged_in_or_error():
@@ -153,28 +155,36 @@ def is_valid_id(id):
 # Helper function to interact with the database
 def query_db(query, args=(), one=False):
     # Connect to the database using the path specified in the config
-    con = sqlite3.connect(app.config['DATABASE'])
-    cur = con.cursor()
-    cur.execute(query, args)
-    # Fetch all results from the query
-    answer = cur.fetchall()
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
     cur.close()
-    con.close()
-    # Return the first result if 'one' is True, otherwise return all results
-    return (answer[0] if answer else None) if one else answer
+    return (rv[0] if rv else None) if one else rv
+
+
+# Helper function to get the database connection
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(app.config['DATABASE'])
+        g.db.row_factory = sqlite3.Row  # Return rows as dictionaries
+    return g.db
 
 
 # Helper function to interact with the database
 def update_db(query, args=()):
     # Connect to the database using the path specified in the config
-    con = sqlite3.connect(app.config['DATABASE'])
-    cur = con.cursor()
-    answer = cur.execute(query, args)
-    con.commit()
+    db = get_db()
+    cur = db.execute(query, args)
+    db.commit()  # Make sure to commit changes
     cur.close()
-    con.close()
-    # Return the first result if 'one' is True, otherwise return all results
-    return answer
+
+
+def update_db_with_last_id(query, args=()):
+    db = get_db()
+    cur = db.execute(query, args)
+    db.commit()
+    last_id = cur.lastrowid
+    cur.close()
+    return last_id
 
 
 def truncate_text(text, max_length=50):
@@ -458,7 +468,8 @@ def admin():
         results = [query_db(query, param) for query, param in search_queries]
 
         return render_template('admin.html', name=name, email=email, age=age,
-                               books=results[0], genres=results[1], authors=results[2])
+                               books=results[0], genres=results[1],
+                               authors=results[2])
 
 
 @app.after_request
@@ -486,7 +497,8 @@ def edit():
         confirm_password = request.form['confirmpassword']
         if int(age) > 100 or int(age) < 16:
             message = 'You are out of age range to register'
-            return render_template('edit.html', name=name, age=age, email=email, message=message)
+            return render_template('edit.html', name=name, age=age,
+                                   email=email, message=message)
         # Validate form data (e.g., check if passwords match)
         if password != confirm_password:
             message = 'Passwords do not match!'
@@ -497,7 +509,7 @@ def edit():
         if user_id:
             # Check if the new username or email is already taken
             existing_user = query_db('SELECT * FROM users WHERE Username = ?', (name,),
-                           one=True)
+                                     one=True)
             if existing_user:
                 # Hash the new password
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -549,13 +561,13 @@ def add_database():
             message1 += 'No selected file'
         if file and allowed_file(file.filename):
             image_filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   'author', image_filename))
+            file.save(os.path.join(app.config['AUTHOR_IMAGE_FOLDER'],
+                                   image_filename))
         if aname and a_description and image_filename:
             update_db('INSERT INTO Author (name, description, image) \
                            VALUES (?, ?, ?)', (aname, a_description,
                                                os.path.join(app.config
-                                                            ['AUTHOR_FOLDER'],
+                                                            ['BOOK_FOLDER'],
                                                             image_filename)))
             message1 += ' Author added successfully!'
 
@@ -572,24 +584,22 @@ def add_database():
             message2 += 'No selected file'
         if file and allowed_file(file.filename):
             image_filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   'book', image_filename))
+            file.save(os.path.join(app.config['BOOK_IMAGE_FOLDER'],
+                                   image_filename))
         if bname and blurb and image_filename:
-            update_db('INSERT INTO Books (name, blurb, image) \
-                           VALUES (?, ?, ?)', (bname, blurb,
-                                               os.path.join(app.config
-                                                            ['BOOK_FOLDER'],
-                                                            image_filename)))
             # Get the ID of the newly inserted book
-            book_id = query_db('SELECT last_insert_rowid()', one=True)[0]
-
+            book_id = update_db_with_last_id("INSERT INTO Books (name, blurb, image) VALUES (?, ?, ?)", (bname, blurb, os.path.join(app.config['BOOK_FOLDER'], image_filename)))
+            # Ensure author_ids and genre_ids are integers
+            author_ids = [int(a_id) for a_id in author_ids]
+            genre_ids = [int(g_id) for g_id in genre_ids]
             # Insert into BookAuthor association table
-            for author_id in author_ids:
-                update_db('INSERT INTO book_author (book, author) VALUES (?, ?)',
+            for author_id in (author_ids):
+                update_db('INSERT INTO book_author (book, author) \
+                          VALUES (?, ?)',
                           (book_id, author_id))
 
             # Insert into BookGenre association table
-            for genre_id in genre_ids:
+            for genre_id in (genre_ids):
                 update_db('INSERT INTO book_genre (book, genre) VALUES (?, ?)',
                           (book_id, genre_id))
             message2 += ' Book added successfully!'
@@ -611,42 +621,36 @@ def add_database():
 
 @app.route('/delete_database', methods=['GET', 'POST'])
 def delete_database():
-    # Check if user is logged in
     result = ensure_logged_in_or_error()
     if result:
         return result
-    message1 = ''
-    message2 = ''
-    message3 = ''
+    messages = {'a_id': '', 'b_id': '', 'g_id': ''}
     if request.method == 'POST':
-        if 'a_id' in request.form:
-            a_id = request.form.get('a_id')
-            if a_id:
+        a_id = request.form.get('a_id')
+        b_id = request.form.get('b_id')
+        g_id = request.form.get('g_id')
+        # Author ID check
+        if a_id:
+            if query_db('SELECT id FROM Author WHERE id=?', (a_id,), one=True):
                 update_db('DELETE FROM Author WHERE id=?', (a_id,))
-                message1 = 'Author deleted successfully!'
+                messages['a_id'] = 'Author deleted successfully!'
             else:
-                message1 = 'No ID provided for Author!'
-
-        elif 'b_id' in request.form:
-            b_id = request.form.get('b_id')
-            if b_id:
+                messages['a_id'] = 'Author ID not found in the database!'
+        # Book ID check
+        if b_id:
+            if query_db('SELECT id FROM Books WHERE id=?', (b_id,), one=True):
                 update_db('DELETE FROM Books WHERE id=?', (b_id,))
-                message2 = 'Book deleted successfully!'
+                messages['b_id'] = 'Book deleted successfully!'
             else:
-                message2 = 'No ID provided for Book!'
-
-        elif 'g_id' in request.form:
-            g_id = request.form.get('g_id')
-            if g_id:
+                messages['b_id'] = 'Book ID not found in the database!'
+        # Genre ID check
+        if g_id:
+            if query_db('SELECT id FROM Genre WHERE id=?', (g_id,), one=True):
                 update_db('DELETE FROM Genre WHERE id=?', (g_id,))
-                message3 = 'Genre deleted successfully!'
+                messages['g_id'] = 'Genre deleted successfully!'
             else:
-                message3 = 'No ID provided for Genre!'
-    # Render the 'admin.html' template
-    return render_template("delete_db.html",
-                           message1=message1,
-                           message2=message2,
-                           message3=message3)
+                messages['g_id'] = 'Genre ID not found in the database!'
+    return render_template("delete_db.html", messages=messages)
 
 
 @app.route('/change_database',  methods=['GET', 'POST'])
@@ -697,11 +701,12 @@ def change_database():
             file = request.files['b_image']
             if allowed_file(file.filename):
                 image_filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'book', image_filename))
-                image_path = os.path.join(app.config['BOOK_FOLDER'], image_filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'book',
+                                       image_filename))
+                image_path = os.path.join(app.config['BOOK_FOLDER'],
+                                          image_filename)
                 # Update with new image
-                update_db('UPDATE Books SET name=?, blurb=?, image=? WHERE id=?',
-                               (bname, blurb, image_path, b_id))
+                update_db('UPDATE Books SET name=?, blurb=?, image=? WHERE id=?', (bname, blurb, image_path, b_id))
                 message2 = 'Book updated successfully!'
             else:
                 message2 = 'Invalid file type for Book image!'
@@ -717,7 +722,7 @@ def change_database():
         gname = request.form.get('gname')
         g_description = request.form.get('g_description')
         update_db('UPDATE Genre SET name=?, description=? WHERE id=?',
-                       (gname, g_description, g_id))
+                  (gname, g_description, g_id))
         message3 = 'Genre updated successfully!'
 
     return render_template('change_db.html',

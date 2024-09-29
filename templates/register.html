@@ -2,7 +2,7 @@
 {% block content %}
 <!-- Page title and heading -->
 <h2>Register | Library</h2>
-<h3>For Admin Only</h3>
+<h3>If you want to become an admin</h3>
 
 <!-- Main content container -->
 <div class="container">
@@ -34,13 +34,13 @@
             <!-- Password input field -->
             <div class="field input">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" autocomplete="off" required maxlength="10">
+                <input type="password" name="password" id="password" autocomplete="off" required minlength="8" maxlength="10">
             </div>
 
             <!-- Confirm Password input field -->
             <div class="field input">
                 <label for="confirmpassword">Confirm Password *</label>
-                <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required maxlength="10">
+                <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" required minlength="8" maxlength="10">
             </div>
 
             <!-- Message display -->
