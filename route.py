@@ -604,7 +604,7 @@ def add_database():
         if file.filename == '':
             # Check if a file was selected
             message['author'] += 'No selected file'
-        # Check if the uploaded file is valid and save it
+        # Check if the uploaded file is valid and save it to path
         if file and allowed_file(file.filename):
             image_filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['AUTHOR_IMAGE_FOLDER'],
@@ -638,7 +638,7 @@ def add_database():
         if file and allowed_file(file.filename):
             # Secure the filename
             image_filename = secure_filename(file.filename)
-            # save
+            # save to path
             file.save(os.path.join(app.config['BOOK_IMAGE_FOLDER'],
                                    image_filename))
         # Check if all required fields are filled before inserting to database
